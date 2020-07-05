@@ -15,3 +15,4 @@ conda activate mixqtl
 
 
 snakemake -s wasp2matrix.snmk --configfile ${PBS_O_WORKDIR}/config.01.yaml -p > ${PBS_O_WORKDIR}/01_submit_job.log 2>&1
+
