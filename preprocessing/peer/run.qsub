@@ -1,0 +1,16 @@
+#PBS -S /bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=8gb
+#PBS -e logs/run_${TISSUE}.err
+#PBS -o logs/run_${TISSUE}.out
+
+
+source ~/.bash_profile
+source ~/.bashrc
+cd /gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-pipeline/pipeline/gtex_v8
+conda activate mixqtl
+
+snakemake -s get_peer_factor.snmk --configfile ${PBS_O_WORKDIR}/config.01.yaml -p \
+  --config tissue=$TISSUE nfactor=$NFACTOR > ${PBS_O_WORKDIR}/logs/run_${TISSUE}.log 2>&1
+  
