@@ -1,0 +1,17 @@
+#PBS -S /bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=8gb
+#PBS -e 01_submit_job.err
+#PBS -o 01_submit_job.out
+#PBS -N wasp2matrix
+
+
+source ~/.bash_profile
+source ~/.bashrc
+cd /gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-pipeline/pipeline/gtex_v8
+conda activate mixqtl 
+
+
+
+snakemake -s wasp2matrix.snmk --configfile ${PBS_O_WORKDIR}/config.01.yaml -p > ${PBS_O_WORKDIR}/01_submit_job.log 2>&1
