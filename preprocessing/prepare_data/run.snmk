@@ -1,0 +1,49 @@
+if 'outdir' not in config:
+    config['outdir'] = 'output'
+
+rule all:
+    input:
+        '{outdir}/{tissue}/total_count.bed.gz'.format(**config),
+        '{outdir}/{tissue}/allele_specific_count.hap1.txt.gz'.format(**config),
+        '{outdir}/{tissue}/allele_specific_count.hap2.txt.gz'.format(**config),
+        '{outdir}/{tissue}/{outdir}/{tissue}/tempo-gtex_v8_library_size.txt'.format(**config),
+        '{outdir}/{tissue}/gtex_v8_library_size.txt.gz'.format(**config),
+        '{outdir}/{tissue}/covariates.txt.gz'.format(**config)
+
+rule ugly_fix_of_gene_model:
+    input:
+        gene_annot = config['gene_annotation'],
+        egene = config['egene']
+    output:
+        '{outdir}/{tissue}/annotations_gencode_v26_fixed_some_from_gtex_v8_egene.tsv'
+    shell:
+        'python ugly_fix_gene_model.py \
+            --egene {input.egene} \
+            --gene-model {input.gene_annot} \
+            --output {output[0]}'
+
+rule prepare_matrices:
+    input:
+        asc = config['ase_matrix'],
+        trc = config['trc_matrix'],
+        lib = config['library_size'],
+        covar = config['covariate_matrix'],
+        gene = '{outdir}/{tissue}/annotations_gencode_v26_fixed_some_from_gtex_v8_egene.tsv'
+    params:
+        '{outdir}/{tissue}'
+    output:
+        trc_out = '{outdir}/{tissue}/total_count.bed.gz',
+        asc1_out = '{outdir}/{tissue}/allele_specific_count.hap1.txt.gz',
+        asc2_out = '{outdir}/{tissue}/allele_specific_count.hap2.txt.gz',
+        intermediate_out = '{outdir}/{tissue}/{outdir}/{tissue}/tempo-gtex_v8_library_size.txt',
+        libsize_out = '{outdir}/{tissue}/gtex_v8_library_size.txt.gz',
+        covar_out = '{outdir}/{tissue}/covariates.txt.gz'
+    shell:
+        'python {config[mixqtl_pipeline_path]}/misc_scripts/prepare_data_for_py_mixqtl_runs/prepare_matrices.py \
+            --ase-matrix {input.asc} \
+            --trc-matrix {input.trc} \
+            --libsize {input.lib} \
+            --covariate-matrix {input.covar} \
+            --outdir {params[0]} \
+            --gene-annotation {input.gene}'
+    

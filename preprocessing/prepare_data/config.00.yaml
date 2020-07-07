@@ -1,0 +1,18 @@
+gene_annotation: '/gpfs/data/im-lab/nas40t2/yanyul/mv_from_scratch/repo_new/rotation-at-imlab/data/annotations_gencode_v26.tsv'
+
+egene: '/gpfs/data/gtex-group/v8/59349/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/eqtl/GTEx_Analysis_v8_eQTL/{tissue}.v8.egenes.txt.gz'
+
+ase_matrix: '/scratch/t.cri.yliang/mixQTL-GTExV8/preprocessing/expression/ase-{tissue}.txt.gz'
+
+trc_matrix: '/scratch/t.cri.yliang/mixQTL-GTExV8/preprocessing/expression/trc-{tissue}.txt.gz'
+
+library_size: '/gpfs/data/gtex-group/v8/63507/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/sample_annotations/GTEx_Analysis_2017-06-05_v8_Annotations_SampleAttributesDS.txt'
+
+covariate_matrix: '/scratch/t.cri.yliang/mixQTL-GTExV8/preprocessing/peer/{tissue}/covariate-combined.txt'
+
+# dependent code path
+mixqtl_pipeline_path: '/gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-pipeline'
+
+# output
+outdir: '/scratch/t.cri.yliang/mixQTL-GTExV8/preprocessing/prepare_data'
+# tissue: 'Whole_Blood'
