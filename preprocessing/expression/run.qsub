@@ -12,6 +12,6 @@ cd /gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-pipeline/pipeline/gtex_v8
 conda activate mixqtl 
 
 snakemake -s expression.snmk --configfile ${PBS_O_WORKDIR}/config.01.yaml -p \
-    --config tissue=$TISSUE extract-name="'$TISSUESTR'" > ${PBS_O_WORKDIR}/logs/run_${TISSUE}.log 2>&1
+    --config tissue=$TISSUE extract_name="$TISSUESTR" > ${PBS_O_WORKDIR}/logs/run_${TISSUE}.log 2>&1
     
     

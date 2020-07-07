@@ -21,6 +21,7 @@ assign = function(x) {
   o[x >= 150 & x < 250] = 30
   o[x >= 250 & x < 350] = 45
   o[x >= 350] = 60
+  o
 }
 
 out = data.frame(tissue = df$tissue, npeer = assign(df$v8_all))
