@@ -6,7 +6,7 @@ rule all:
         '{outdir}/{tissue}/total_count.bed.gz'.format(**config),
         '{outdir}/{tissue}/allele_specific_count.hap1.txt.gz'.format(**config),
         '{outdir}/{tissue}/allele_specific_count.hap2.txt.gz'.format(**config),
-        '{outdir}/{tissue}/{outdir}/{tissue}/tempo-gtex_v8_library_size.txt'.format(**config),
+        '{outdir}/{tissue}/tempo-gtex_v8_library_size.txt'.format(**config),
         '{outdir}/{tissue}/gtex_v8_library_size.txt.gz'.format(**config),
         '{outdir}/{tissue}/covariates.txt.gz'.format(**config)
 
@@ -35,7 +35,7 @@ rule prepare_matrices:
         trc_out = '{outdir}/{tissue}/total_count.bed.gz',
         asc1_out = '{outdir}/{tissue}/allele_specific_count.hap1.txt.gz',
         asc2_out = '{outdir}/{tissue}/allele_specific_count.hap2.txt.gz',
-        intermediate_out = '{outdir}/{tissue}/{outdir}/{tissue}/tempo-gtex_v8_library_size.txt',
+        intermediate_out = '{outdir}/{tissue}/tempo-gtex_v8_library_size.txt',
         libsize_out = '{outdir}/{tissue}/gtex_v8_library_size.txt.gz',
         covar_out = '{outdir}/{tissue}/covariates.txt.gz'
     shell:

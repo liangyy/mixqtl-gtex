@@ -2,7 +2,7 @@
 hap_pattern: '/scratch/t.cri.yliang/gtexv8_genotype_in_parquet/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.MAF01.chr{{chr_num}}.hap{hap_num}.parquet'
 
 library_size: 
-  path: '/scratch/t.cri.yliang/mixQTL-GTExV8/misc_data/gtex_v8_library_size.txt'
+  path: '/scratch/t.cri.yliang/mixQTL-GTExV8/preprocessing/prepare_data/{tissue}/gtex_v8_library_size.txt.gz'
   sample_id_col: 'SAMPID'
   libsize_col: 'SMMPPD'
 
@@ -22,3 +22,4 @@ tensorqtl_param_yaml: 'tensorqtl_param.yaml'
 nthread: 8
 tensorqtl_dir: '/gpfs/data/im-lab/nas40t2/yanyul/GitHub/tensorqtl/tensorqtl'
 run_script_path: '/gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-pipeline/misc_scripts/prepare_data_for_py_mixqtl_runs/run_py_mixqtl.py'
+
