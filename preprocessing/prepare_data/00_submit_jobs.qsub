@@ -1,0 +1,31 @@
+#PBS -S /bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=8gb
+#PBS -e logs/run_all.err
+#PBS -o logs/run_all.out
+
+
+source ~/.bash_profile
+source ~/.bashrc
+cd /gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-gtex/preprocessing/prepare_data
+conda activate metaxcan  # need pandas 1.0.3 so switch to this conda env 
+
+mkdir -p logs
+
+SNMK=/gpfs/data/im-lab/nas40t2/yanyul/softwares/miniconda2/envs/mixqtl/bin/snakemake
+
+for tt in `cat ../expression/tissue_metainfo.csv | cut -f 1 -d,`
+do
+  if [[ -f /scratch/t.cri.yliang/mixQTL-GTExV8/preprocessing/peer/$tt/covariate-combined.txt ]]
+  then
+    if [[ ! -f /scratch/t.cri.yliang/mixQTL-GTExV8/preprocessing/prepare_data/$tt/covariates.txt.gz ]]
+    then
+
+      $SNMK -s run.snmk --configfile ${PBS_O_WORKDIR}/config.00.yaml -p \
+        --config tissue=$tt > ${PBS_O_WORKDIR}/logs/run_$tt.log 2>&1
+    
+    fi
+  fi
+done
+ 

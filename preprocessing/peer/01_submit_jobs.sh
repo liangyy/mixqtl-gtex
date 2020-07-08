@@ -8,5 +8,8 @@ do
   IFS=',' read -a array <<< "$row"
   tissue="${array[0]}"
   nfactor="${array[1]}"
-  echo qsub -N peer-$tissue -v TISSUE=$tissue,NFACTOR=$nfactor run.qsub
+  if [[ ! -f ~/scratch/mixQTL-GTExV8/preprocessing/peer/$tissue/covariate-combined.txt ]]
+  then
+    qsub -N peer-$tissue -v TISSUE=$tissue,NFACTOR=$nfactor run.qsub
+  fi
 done
