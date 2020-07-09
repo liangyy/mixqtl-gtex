@@ -3,7 +3,7 @@ if 'outdir' not in config:
 
 rule all:
     input:
-        [ '{outdir}/{tissue}/mixqtl.{tissue}_GTEx_eGene.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ]
+        [ '{outdir}/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ]
     
 rule mixqtl:
     input:
@@ -24,7 +24,7 @@ rule mixqtl:
         asc_genecol = config['asc']['gene_col'],
         egene_genecol = config['egene']['gene_col']
     output:
-        '{outdir}/{tissue}/mixqtl.{tissue}_GTEx_eGene.chr{chr_num}.parquet'
+        '{outdir}/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet'
     log: 
         '{outdir}/{tissue}/mixqtl.{tissue}_GTEx_eGene.chr{chr_num}.log'
     threads: 

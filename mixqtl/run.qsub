@@ -1,6 +1,6 @@
 #PBS -S /bin/bash
 #PBS -l walltime=24:00:00
-#PBS -l mem=8gb
+#PBS -l mem=16gb
 #PBS -e logs/run_${TISSUE}.err
 #PBS -o logs/run_${TISSUE}.out
 
