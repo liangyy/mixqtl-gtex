@@ -13,6 +13,11 @@ conda activate metaxcan  # need pandas 1.0.3 so switch to this conda env
 
 mkdir -p logs
 
+if [[ -z $PBS_O_WORKDIR ]]
+then
+  PBS_O_WORKDIR=/gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-gtex/preprocessing/prepare_data
+fi
+
 SNMK=/gpfs/data/im-lab/nas40t2/yanyul/softwares/miniconda2/envs/mixqtl/bin/snakemake
 
 for tt in `cat ../expression/tissue_metainfo.csv | cut -f 1 -d,`
