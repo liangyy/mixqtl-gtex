@@ -1,5 +1,5 @@
 # runtime of mixqtl by tissue and sample size
-
+library(ggplot2)
 theme_set(theme_bw(base_size = 12))
 
 source('https://gist.githubusercontent.com/liangyy/43912b3ecab5d10c89f9d4b2669871c9/raw/3ca651cfa53ffccb8422f432561138a46e93710f/my_ggplot_theme.R')
