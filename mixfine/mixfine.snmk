@@ -40,7 +40,7 @@ rule finemap:
         hap_pattern = config['hap_pattern'].format(hap_num='{}'),
         asc_pattern = config['asc']['pattern'].format(hap_num='{}'),
         outdir = '{outdir}/{tissue}',
-        outprefix = 'mixqtl.{tissue}_GTEx_eGene',
+        outprefix = 'mixfine.{tissue}_GTEx_eGene',
         libsize = config['library_size']['libsize_col'],
         sample = config['library_size']['sample_id_col'],
         asc_genecol = config['asc']['gene_col'],
@@ -51,7 +51,7 @@ rule finemap:
     log: 
         '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.chr{chr_num}.log'
     threads: 
-        config['nthread']
+        1 
     shell:
         'python run_r_mixfine.py \
             --hap-file {params.hap_pattern} \
