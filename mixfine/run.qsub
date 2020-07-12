@@ -1,0 +1,18 @@
+#PBS -S /bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l mem=32gb
+#PBS -e logs/run-${MYCONF}_${TISSUE}.err
+#PBS -o logs/run-${MYCONF}_${TISSUE}.out
+
+
+source ~/.bash_profile
+source ~/.bashrc
+cd ${PBS_O_WORKDIR}
+
+conda activate pytorch-1.4.0-cpu_py37
+
+SNMK=/gpfs/data/im-lab/nas40t2/yanyul/softwares/miniconda2/envs/mixqtl/bin/snakemake
+
+$SNMK -s mixfine.snmk --configfile config.$MYCONF.yaml -p \
+  --config tissue=$TISSUE --cores ${NCORE} > ${PBS_O_WORKDIR}/logs/run-${MYCONF}_${TISSUE}.log 2>&1
+  

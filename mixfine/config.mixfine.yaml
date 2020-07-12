@@ -1,4 +1,6 @@
-outdir: '/scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl'
+mode: 'mixfine'
+
+outdir: '/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine'
 
 # gene list qc
 asc_cutoff: 50
