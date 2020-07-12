@@ -26,11 +26,15 @@ opt <- parse_args(opt_parser)
 
 library(dplyr)
 
+trim_dot = function(ss) {
+  unlist(lapply(strsplit(ss, '\\.'), function(x) { x[1] }))
+}
+
 dl = readRDS(opt$count_data_rds)
 
-# we don't impose restriction on TRC
-trc_cutoff = 0
-trc_nobs_cutoff = 0
+# we impose restriction on TRC
+trc_cutoff = 100
+trc_nobs_cutoff = 50
 
 # restriction on ASC
 asc_cutoff = opt$asc_cutoff
@@ -50,7 +54,11 @@ trc_median_of_indiv_pass_qc = apply(dl$df_trc, 1, function(x) {
 df2 = df %>% filter(pass_asc_qc, pass_trc_qc) %>% select(-pass_asc_qc, -pass_trc_qc)
 df2$median_trc = trc_median_of_indiv_pass_qc[match(df2$gene, names(trc_median_of_indiv_pass_qc))]
 
+print(head(df2))
 gene_list = read.table(opt$gene_list, header = T, sep = '\t')
-df2 = df2[ df2$gene %in% gene_list[, opt$gene_col], ]
+df2 = df2[ df2$gene %in% trim_dot(as.character(gene_list[, opt$gene_col])), ]
 
-write.table(df2 %>% select(gene, median_trc), opt$output, row = F, col = T, quo = F, sep = '\t')
+gz1 <- gzfile(opt$output, "w")
+write.table(df2 %>% select(gene, median_trc), gz1, row = F, col = T, quo = F, sep = '\t')
+close(gz1)
+

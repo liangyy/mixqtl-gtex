@@ -57,6 +57,10 @@ parser.add_argument('--nthread', type=int, default=1, help='''
 parser.add_argument('--impute-trc', action='store_true', help='''
     add it if want to impute zero trc as one.
 ''')
+parser.add_argument('--mode', type=str, help='''
+    finemapping mode: mixfine, nefine, trcfine.
+    please make sure that the input is consistent with the mode.
+''')
 args = parser.parse_args()
 
 
@@ -116,6 +120,12 @@ sys.path.insert(0, args.tensorqtl)
 import mixfine
 import tensorqtl
 ## 
+
+## check mode
+if args.mode == 'mixfine' or args.mode == 'trcfine' or args.mode == 'nefine':
+    pass
+else:
+    raise ValueError('Unsupported mode: {}'.format(args.mode))
 
 # input files
 ## genotypes
@@ -202,11 +212,11 @@ covariates_df = pd.read_csv(covar_file, sep = '\t', index_col = 0, compression =
 covariates_df = covariates_df.loc[phenotype_df.columns.to_list(), :]
 
 # run mixfine
-logging.info('Run mixFine')
+logging.info('Run mixFine: mode = {}'.format(args.mode))
 ix = phenotype_pos_df[phenotype_pos_df['chr']==args.chr].index
 mixfine.run_mixfine(hap1_df, hap2_df, variant_df, 
                    libsize_df, phenotype_df.loc[ix], ref_df.loc[ix], alt_df.loc[ix],
                    phenotype_pos_df.loc[ix], covariates_df, output_prefix,
-                   output_dir=outdir, verbose=True,
+                   output_dir=outdir, verbose=True, mode=args.mode,
                    **param_mixfine)
 
