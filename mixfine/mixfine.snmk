@@ -27,46 +27,77 @@ rule gene_qc:
           --count_data_rds {input.dl} \
           --output {output[0]}'
 
-rule finemap:
-    input:
-        hap = [ config['hap_pattern'].format(hap_num=kk) for kk in range(1, 3) ],
-        lib_size = config['library_size']['path'],
-        asc = [ config['asc']['pattern'].format(hap_num=kk) for kk in range(1, 3) ],
-        trc = config['trc_pattern'],
-        covar = config['covariate_pattern'],
-        gene_list = '{outdir}/{tissue}/genes-passed-qc.txt.gz',
-        param_yaml = config['tensorqtl_param_yaml']
-    params:
-        hap_pattern = config['hap_pattern'].format(hap_num='{}'),
-        asc_pattern = config['asc']['pattern'].format(hap_num='{}'),
-        outdir = '{outdir}/{tissue}',
-        outprefix = 'mixfine.{tissue}_GTEx_eGene',
-        libsize = config['library_size']['libsize_col'],
-        sample = config['library_size']['sample_id_col'],
-        asc_genecol = config['asc']['gene_col'],
-        egene_genecol = 'gene'
-    output:
-        '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet',
-        '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'
-    log: 
-        '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.chr{chr_num}.log'
-    threads: 
-        1 
-    shell:
-        'python run_r_mixfine.py \
-            --hap-file {params.hap_pattern} \
-            --libsize {input.lib_size}:{params.sample}:{params.libsize} \
-            --covariate-matrix {input.covar} \
-            --asc-matrix {params.asc_pattern}:{params.asc_genecol} \
-            --trc-matrix {input.trc} \
-            --param-yaml {input.param_yaml} \
-            --out-dir {params.outdir} \
-            --out-prefix {params.outprefix} \
-            --tensorqtl {config[tensorqtl_dir]} \
-            --chr chr{wildcards.chr_num} \
-            --impute-trc \
-            --gene-list {input.gene_list}:{params.egene_genecol} \
-            --mode {wildcards.mode} \
-            --nthread {threads} > {log} 2>&1'
-        
+if config['mode'] == 'mixfine': 
+    rule finemap:
+        input:
+            hap = [ config['hap_pattern'].format(hap_num=kk) for kk in range(1, 3) ],
+            lib_size = config['library_size']['path'],
+            asc = [ config['asc']['pattern'].format(hap_num=kk) for kk in range(1, 3) ],
+            trc = config['trc_pattern'],
+            covar = config['covariate_pattern'],
+            gene_list = '{outdir}/{tissue}/genes-passed-qc.txt.gz',
+            param_yaml = config['tensorqtl_param_yaml']
+        params:
+            hap_pattern = config['hap_pattern'].format(hap_num='{}'),
+            asc_pattern = config['asc']['pattern'].format(hap_num='{}'),
+            outdir = '{outdir}/{tissue}',
+            outprefix = 'mixfine.{tissue}_GTEx_eGene',
+            libsize = config['library_size']['libsize_col'],
+            sample = config['library_size']['sample_id_col'],
+            asc_genecol = config['asc']['gene_col'],
+            egene_genecol = 'gene'
+        output:
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet',
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'
+        log: 
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.chr{chr_num}.log'
+        threads: 
+            1 
+        shell:
+            'python run_r_mixfine.py \
+                --hap-file {params.hap_pattern} \
+                --libsize {input.lib_size}:{params.sample}:{params.libsize} \
+                --covariate-matrix {input.covar} \
+                --asc-matrix {params.asc_pattern}:{params.asc_genecol} \
+                --trc-matrix {input.trc} \
+                --param-yaml {input.param_yaml} \
+                --out-dir {params.outdir} \
+                --out-prefix {params.outprefix} \
+                --tensorqtl {config[tensorqtl_dir]} \
+                --chr chr{wildcards.chr_num} \
+                --impute-trc \
+                --gene-list {input.gene_list}:{params.egene_genecol} \
+                --mode {wildcards.mode} \
+                --nthread {threads} > {log} 2>&1'
+elif config['mode'] == 'nefine':
+    rule finemap:
+        input:
+            hap = [ config['hap_pattern'].format(hap_num=kk) for kk in range(1, 3) ],
+            norm_expr = config['trc_pattern'],
+            covar = config['covariate_pattern'],
+            gene_list = '{outdir}/{tissue}/genes-passed-qc.txt.gz'
+        params:
+            hap_pattern = config['hap_pattern'].format(hap_num='{}'),
+            outdir = '{outdir}/{tissue}',
+            outprefix = 'mixfine.{tissue}_GTEx_eGene',
+            egene_genecol = 'gene'
+        output:
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet',
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'
+        log: 
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.chr{chr_num}.log'
+        threads: 
+            1 
+        shell:
+            'python run_r_mixfine.py \
+                --hap-file {params.hap_pattern} \
+                --covariate-matrix {input.covar} \
+                --trc-matrix {input.trc} \
+                --out-dir {params.outdir} \
+                --out-prefix {params.outprefix} \
+                --tensorqtl {config[tensorqtl_dir]} \
+                --chr chr{wildcards.chr_num} \
+                --gene-list {input.gene_list}:{params.egene_genecol} \
+                --mode {wildcards.mode} \
+                --nthread {threads} > {log} 2>&1'
         

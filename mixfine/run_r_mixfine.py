@@ -34,9 +34,11 @@ parser.add_argument('--asc-matrix', help='''
 parser.add_argument('--trc-matrix', help='''
     total count matrix 
     (formatted by prepare_matrices.py).
+    Or normalized expression matrix 
+    (if mode = nefine)
 ''')
-parser.add_argument('--param-yaml', default=1, help='''
-    yaml file to specify parameters for mixfine run.
+parser.add_argument('--param-yaml', default=None, help='''
+    yaml file to specify parameters for mixfine/trcfine run.
     Will be put as **kwargs in mixfine call.
 ''')
 parser.add_argument('--out-dir', help='''
@@ -75,6 +77,8 @@ logging.basicConfig(
 
 import yaml
 def load_yaml(f):
+    if f is None:
+        return {}
     with open(f, 'r') as stream:
         data_loaded = yaml.safe_load(stream)
     return data_loaded
@@ -106,6 +110,13 @@ def filter_by_all(df, llogical):
     df = df.loc[fl, :]
     return df
 
+def read_covar(df):
+    filename, file_extension = os.path.splitext(df)
+    if file_extension == 'gz':
+        return pd.read_csv(df, sep = '\t', index_col = 0, compression = 'gzip').T
+    else:
+        return pd.read_csv(df, sep = '\t', index_col = 0).T
+
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
@@ -133,18 +144,22 @@ hap1_file = args.hap_file.format(1)
 hap2_file = args.hap_file.format(2)
 ## total count matrix
 trc_bed_file = args.trc_matrix
-## library size
-lib_file_ = args.libsize.split(':')
-lib_file = lib_file_[0]
-sample_col = lib_file_[1]
-size_col = lib_file_[2]
-## allele-specific count matrix
-asc_ = args.asc_matrix.split(':')
-asc1_file = asc_[0].format(1)
-asc2_file = asc_[0].format(2)
-asc_gene_col = asc_[1]
+
+if args.mode != 'nefine':
+    ## library size
+    lib_file_ = args.libsize.split(':')
+    lib_file = lib_file_[0]
+    sample_col = lib_file_[1]
+    size_col = lib_file_[2]
+    ## allele-specific count matrix
+    asc_ = args.asc_matrix.split(':')
+    asc1_file = asc_[0].format(1)
+    asc2_file = asc_[0].format(2)
+    asc_gene_col = asc_[1]
+
 ## covariate matrix
 covar_file = args.covariate_matrix
+
 
 # output
 output_prefix = args.out_prefix
@@ -172,33 +187,43 @@ variant_df = pd.DataFrame(
 # load total counts and library size
 logging.info('Load total counts and library size')
 phenotype_df, phenotype_pos_df = tensorqtl.read_phenotype_bed(trc_bed_file)
-if args.impute_trc is True:
+if args.impute_trc is True and args.mode != 'nefine':
     phenotype_df = phenotype_df + 1
-libsize_df = pd.read_csv(lib_file, header = 0, sep = '\t', compression = 'gzip')
-libsize_df = libsize_df.set_index(sample_col)
-libsize_s = libsize_df.loc[phenotype_df.columns.tolist(), size_col]
-## compute log(count / libsize / 2)
-log_counts_df = np.log(phenotype_df / libsize_s / 2)
-log_counts_df = log_counts_df.loc[phenotype_df.index]
-log_counts_df[log_counts_df == -np.Inf] = np.NaN
 
-# load allele-specific counts
-logging.info('Load allele-specific counts')
-ref_df = pd.read_csv(asc1_file, sep = '\t', compression = 'gzip', header = 0)
-alt_df = pd.read_csv(asc2_file, sep = '\t', compression = 'gzip', header = 0)
+if args.mode != 'nefine':
+    libsize_df = pd.read_csv(lib_file, header = 0, sep = '\t', compression = 'gzip')
+    libsize_df = libsize_df.set_index(sample_col)
+    libsize_s = libsize_df.loc[phenotype_df.columns.tolist(), size_col]
+    ## compute log(count / libsize / 2)
+    log_counts_df = np.log(phenotype_df / libsize_s / 2)
+    log_counts_df = log_counts_df.loc[phenotype_df.index]
+    log_counts_df[log_counts_df == -np.Inf] = np.NaN
+else:
+    # add place holder
+    libsize_df = pd.DataFrame({'indiv': phenotype_df.columns.tolist(), 'libsize': 1}).set_index('indiv')
 
-ref_df = ref_df.set_index(asc_gene_col)
-alt_df = alt_df.set_index(asc_gene_col)
+if args.mode == 'mixfine':
+    # load allele-specific counts
+    logging.info('Load allele-specific counts')
+    ref_df = pd.read_csv(asc1_file, sep = '\t', compression = 'gzip', header = 0)
+    alt_df = pd.read_csv(asc2_file, sep = '\t', compression = 'gzip', header = 0)
 
-ref_df = ref_df.loc[~ref_df.index.duplicated(keep = 'first')]
-alt_df = alt_df.loc[~alt_df.index.duplicated(keep = 'first')]
+    ref_df = ref_df.set_index(asc_gene_col)
+    alt_df = alt_df.set_index(asc_gene_col)
 
-ref_df = ref_df.loc[:, phenotype_df.columns.to_list()]
-alt_df = alt_df.loc[:, phenotype_df.columns.to_list()]
+    ref_df = ref_df.loc[~ref_df.index.duplicated(keep = 'first')]
+    alt_df = alt_df.loc[~alt_df.index.duplicated(keep = 'first')]
 
-ref_df = ref_df.loc[phenotype_df.index.to_list(), :]
-alt_df = alt_df.loc[phenotype_df.index.to_list(), :]
+    ref_df = ref_df.loc[:, phenotype_df.columns.to_list()]
+    alt_df = alt_df.loc[:, phenotype_df.columns.to_list()]
 
+    ref_df = ref_df.loc[phenotype_df.index.to_list(), :]
+    alt_df = alt_df.loc[phenotype_df.index.to_list(), :]
+else:
+    # add place holder
+    ref_df = phenotype_df.copy()  
+    alt_df = phenotype_df.copy()
+    
 # filter by gene list
 if args.gene_list is not None:
     filename, genecol = args.gene_list.split(':')
@@ -208,7 +233,7 @@ if args.gene_list is not None:
 
 # load covariates
 logging.info('Load covariates')
-covariates_df = pd.read_csv(covar_file, sep = '\t', index_col = 0, compression = 'gzip').T
+covariates_df = read_covar(covar_file)
 covariates_df = covariates_df.loc[phenotype_df.columns.to_list(), :]
 
 # run mixfine
