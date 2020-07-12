@@ -1,0 +1,70 @@
+if 'outdir' not in config:
+    config['outdir'] = 'output'
+
+rule all:
+    input:
+        [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ],
+        [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ]
+
+rule gene_qc:
+    '''
+    From the gene list, select genes passing QC
+    '''
+    input:
+        gene_list = config['egene']['pattern'],
+        dl = config['count_data_rds']
+    params:
+        asc_cutoff = config['asc_cutoff'],
+        asc_nobs_cutoff = config['asc_nobs_cutoff'],
+        genecol = config['egene']['gene_col']
+    output:
+        '{outdir}/{tissue}/genes-passed-qc.txt'
+    shell:
+        'Rscript gene_qc.R --gene_list {input[0]} \
+          --asc_cutoff {params.asc_cutoff} \
+          --asc_nobs_cutoff {params.asc_nobs_cutoff} \
+          --gene_col {params.genecol} \
+          --count_data_rds {input.dl} \
+          --output {output[0]}'
+
+rule finemap:
+    input:
+        hap = [ config['hap_pattern'].format(hap_num=kk) for kk in range(1, 3) ],
+        lib_size = config['library_size']['path'],
+        asc = [ config['asc']['pattern'].format(hap_num=kk) for kk in range(1, 3) ],
+        trc = config['trc_pattern'],
+        covar = config['covariate_pattern'],
+        gene_list = '{outdir}/{tissue}/genes-passed-qc.txt',
+        param_yaml = config['tensorqtl_param_yaml']
+    params:
+        hap_pattern = config['hap_pattern'].format(hap_num='{}'),
+        asc_pattern = config['asc']['pattern'].format(hap_num='{}'),
+        outdir = '{outdir}/{tissue}',
+        outprefix = 'mixqtl.{tissue}_GTEx_eGene',
+        libsize = config['library_size']['libsize_col'],
+        sample = config['library_size']['sample_id_col'],
+        asc_genecol = config['asc']['gene_col'],
+        egene_genecol = 'gene'
+    output:
+        '{outdir}/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet'
+    log: 
+        '{outdir}/{tissue}/mixqtl.{tissue}_GTEx_eGene.chr{chr_num}.log'
+    threads: 
+        config['nthread']
+    shell:
+        'python run_r_mixfine.py \
+            --hap-file {params.hap_pattern} \
+            --libsize {input.lib_size}:{params.sample}:{params.libsize} \
+            --covariate-matrix {input.covar} \
+            --asc-matrix {params.asc_pattern}:{params.asc_genecol} \
+            --trc-matrix {input.trc} \
+            --param-yaml {input.param_yaml} \
+            --out-dir {params.outdir} \
+            --out-prefix {params.outprefix} \
+            --tensorqtl {config[tensorqtl_dir]} \
+            --chr chr{wildcards.chr_num} \
+            --impute-trc \
+            --gene-list {input.gene_list}:{params.egene_genecol} \
+            --nthread {threads} > {log} 2>&1'
+        
+        
