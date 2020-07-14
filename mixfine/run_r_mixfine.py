@@ -117,6 +117,17 @@ def read_covar(df):
     else:
         return pd.read_csv(df, sep = '\t', index_col = 0).T
 
+def update_gene_id_index(df):
+    tmp = df.reset_index(drop=False)
+    new = trim_gene_id(tmp.gene_id.tolist())
+    # tmp.drop(columns='gene_id', inplace=True)
+    tmp['gene_id'] = new
+    tmp.set_index('gene_id', inplace=True)
+    return tmp
+
+def trim_gene_id(ss):
+    return [ i.split('.')[0] for i in ss ]
+
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
@@ -187,6 +198,9 @@ variant_df = pd.DataFrame(
 # load total counts and library size
 logging.info('Load total counts and library size')
 phenotype_df, phenotype_pos_df = tensorqtl.read_phenotype_bed(trc_bed_file)
+# breakpoint()
+phenotype_df = update_gene_id_index(phenotype_df)
+phenotype_pos_df = update_gene_id_index(phenotype_pos_df)
 if args.impute_trc is True and args.mode != 'nefine':
     phenotype_df = phenotype_df + 1
 

@@ -92,7 +92,7 @@ elif config['mode'] == 'nefine':
             'python run_r_mixfine.py \
                 --hap-file {params.hap_pattern} \
                 --covariate-matrix {input.covar} \
-                --trc-matrix {input.trc} \
+                --trc-matrix {input.norm_expr} \
                 --out-dir {params.outdir} \
                 --out-prefix {params.outprefix} \
                 --tensorqtl {config[tensorqtl_dir]} \
