@@ -34,7 +34,7 @@ dl = readRDS(opt$count_data_rds)
 
 # we impose restriction on TRC
 trc_cutoff = 100
-trc_nobs_cutoff = 150
+trc_nobs_cutoff = floor(0.8 * ncol(dl$df_trc))
 
 # restriction on ASC
 asc_cutoff = opt$asc_cutoff
