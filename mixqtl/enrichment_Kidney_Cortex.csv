@@ -1,0 +1,61 @@
+,baseline,mixqtl,eqtl,type,gene_list
+enhancer,80953,312,284,top_qtl,all
+promoter,88908,619,617,top_qtl,all
+open_chromatin_region,242984,681,710,top_qtl,all
+promoter_flanking_region,233186,1066,1058,top_qtl,all
+TF_binding_site,44647,218,195,top_qtl,all
+total,9980897,24028,24028,top_qtl,all
+enhancer,73980,64,51,top_qtl,strong
+promoter,82509,200,136,top_qtl,strong
+open_chromatin_region,203401,138,142,top_qtl,strong
+promoter_flanking_region,215888,230,247,top_qtl,strong
+TF_binding_site,40612,55,44,top_qtl,strong
+total,7520919,4596,4596,top_qtl,strong
+enhancer,73980,34,28,top_pip,strong
+promoter,82509,129,85,top_pip,strong
+open_chromatin_region,203401,83,73,top_pip,strong
+promoter_flanking_region,215888,139,150,top_pip,strong
+TF_binding_site,40612,32,32,top_pip,strong
+total,7520919,2614,2500,top_pip,strong
+enhancer,73980,21,15,top_pip,strong (in both)
+promoter,82509,98,64,top_pip,strong (in both)
+open_chromatin_region,203401,44,38,top_pip,strong (in both)
+promoter_flanking_region,215888,81,86,top_pip,strong (in both)
+TF_binding_site,40612,21,17,top_pip,strong (in both)
+total,7520919,1554,1554,top_pip,strong (in both)
+enhancer,73980,249,36,95%_cs,strong
+promoter,82509,753,187,95%_cs,strong
+open_chromatin_region,203401,463,125,95%_cs,strong
+promoter_flanking_region,215888,682,133,95%_cs,strong
+TF_binding_site,40612,189,31,95%_cs,strong
+total,7520919,18169,3893,95%_cs,strong
+enhancer,73980,32,30,95%_cs,strong (in both)
+promoter,82509,165,152,95%_cs,strong (in both)
+open_chromatin_region,203401,58,92,95%_cs,strong (in both)
+promoter_flanking_region,215888,95,108,95%_cs,strong (in both)
+TF_binding_site,40612,22,27,95%_cs,strong (in both)
+total,7520919,2644,3023,95%_cs,strong (in both)
+enhancer,73980,18,16,95%_cs (shared),strong (in both)
+promoter,82509,109,111,95%_cs (shared),strong (in both)
+open_chromatin_region,203401,26,42,95%_cs (shared),strong (in both)
+promoter_flanking_region,215888,50,76,95%_cs (shared),strong (in both)
+TF_binding_site,40612,16,22,95%_cs (shared),strong (in both)
+total,7520919,1466,1833,95%_cs (shared),strong (in both)
+enhancer,73980,231,20,95%_cs (not shared),strong
+promoter,82509,644,76,95%_cs (not shared),strong
+open_chromatin_region,203401,437,83,95%_cs (not shared),strong
+promoter_flanking_region,215888,632,57,95%_cs (not shared),strong
+TF_binding_site,40612,173,9,95%_cs (not shared),strong
+total,7520919,16703,2060,95%_cs (not shared),strong
+enhancer,73980,0,0,95%_cs (shared) top snp,strong (in both)
+promoter,82509,19,21,95%_cs (shared) top snp,strong (in both)
+open_chromatin_region,203401,3,1,95%_cs (shared) top snp,strong (in both)
+promoter_flanking_region,215888,5,5,95%_cs (shared) top snp,strong (in both)
+TF_binding_site,40612,2,2,95%_cs (shared) top snp,strong (in both)
+total,7520919,98,98,95%_cs (shared) top snp,strong (in both)
+enhancer,73980,21,0,95%_cs (not shared) top snp,strong
+promoter,82509,68,6,95%_cs (not shared) top snp,strong
+open_chromatin_region,203401,44,5,95%_cs (not shared) top snp,strong
+promoter_flanking_region,215888,63,5,95%_cs (not shared) top snp,strong
+TF_binding_site,40612,14,1,95%_cs (not shared) top snp,strong
+total,7520919,1171,120,95%_cs (not shared) top snp,strong
