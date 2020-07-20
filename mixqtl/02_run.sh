@@ -15,7 +15,10 @@ then
 fi
 conda activate mixqtl
 
-cd $PBS_O_WORKDIR
+if [[ ! -z $PBS_O_WORKDIR ]]
+then
+  cd $PBS_O_WORKDIR
+fi
 
 function_annotation='/gpfs/data/im-lab/nas40t2/rbonazzola/GTEx/v8/annotations/WGS_Feature_overlap_collapsed.txt.gz'
 mixqtl='/scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet'
