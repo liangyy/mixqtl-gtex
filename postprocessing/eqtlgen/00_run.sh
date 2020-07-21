@@ -24,23 +24,28 @@ mkdir -p $outdir
 
 for seed in `seq 1 10`
 do
+  if [[ ! -f eqtlgen_pos.subsample-with-gene-qc.seed$seed.txt.gz ]] 
+  then
+    echo "Seed = $seed: positive samples"
+    bash sample_positive_from_eqtlgen.sh \
+      $codepath \
+      $genelist \
+      100000 \
+      $seed \
+      $eqtlpos \
+      $outdir
+  fi
   
-  echo "Seed = $seed: positive samples"
-  bash sample_positive_from_eqtlgen.sh \
-    $codepath \
-    $genelist \
-    100000 \
-    $seed \
-    $eqtlpos \
-    $outdir
-  
-  echo "Seed = $seed: negative samples"
-  bash sample_negative_from_eqtlgen.sh \
-    $codepath \
-    $genelist \
-    100000 \
-    $seed \
-    $eqtlneg \
-    $outdir
+  if [[ ! -f eqtlgen_neg.subsample-with-gene-qc.seed$seed.txt.gz ]]
+  then
+    echo "Seed = $seed: negative samples"
+    bash sample_negative_from_eqtlgen.sh \
+      $codepath \
+      $genelist \
+      100000 \
+      $seed \
+      $eqtlneg \
+      $outdir
+  fi
 
 done

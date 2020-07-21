@@ -14,7 +14,7 @@ eqtlgen=$5
 prefix=$6/eqtlgen_pos
 
 if [ ! -f $prefix.pos-with-gene-qc.txt.gz ];then
-  awk 'FNR==NR{a[$1]=1;next}{ if($8 in a) print $0}' $genelist <(zcat $eqtlgen) | gzip > $prefix.pos-with-gene-qc.txt.gz
+  awk 'FNR==NR{a[$1]=1;next}{ if($8 in a) print $0}' <(zcat $GENELIST) <(zcat $eqtlgen) | gzip > $prefix.pos-with-gene-qc.txt.gz
 fi
 
 nrow=`zcat $prefix.pos-with-gene-qc.txt.gz | wc -l` 
