@@ -1,51 +1,42 @@
-import pandas as pd
-import numpy as np
-import os 
+import os
+from functional_enrichment import *
 
-def get_min(x):
-    d = {}
-    d['pmin'] = x.pval.min()
-    d['variant_id'] = x.variant_id[x.pval.idxmin()]
-    return pd.Series(d)
-def get_max_pip(x):
-    d = {}
-    d['pip_max'] = x.variable_prob.max()
-    d['variant_id'] = x.variant_id[x.variable_prob.idxmax()]
-    return pd.Series(d)
-def trim_dot(ss):
-    return [ s.split('.')[0] for s in ss ]
-def in_both(g1, g2):
-    gg = set(g1)
-    gg = gg.intersection(set(g2))
-    return list(gg)
-def glue(s1, s2):
-    o = []
-    for i in range(len(s1)):
-        o.append('{}-{}'.format(s1[i], s2[i]))
-    return o
-def file_exists(filename):
-    return os.path.isfile(filename) and os.access(filename, os.R_OK)
-def get_df(bg, mix, qtl, cols):
-    bb = bg[cols].sum()
-    mm = pd.merge(mix, bg, left_on='variant_id', right_on='VARIANT')[cols].sum()
-    qq = pd.merge(qtl, bg, left_on='variant_id', right_on='VARIANT')[cols].sum()
-    tmp = pd.concat((bb, mm, qq), axis=1)
-    tmp.columns = ['baseline', 'mixqtl', 'eqtl']
-    return tmp
+def id2pos(ll):
+    ch = []
+    po = []
+    for i in ll:
+        c, p, _, _, _ = i.split('_')
+        ch.append(c)
+        po.append(int(p) - 1)
+    return pd.DataFrame({'chr': ch, 'start': po, 'end': np.array(po) + 1, 'var': ll})
+
+def save_bed(ff, filename):
+    ff = ff.sort_values(by='start', ascending=True, na_position='first')
+    ff.to_csv(filename, sep='\t', index=False, header=False, compression='gzip')
+        
+def construct_annotation_table_from_variant_list(variant_list, annot_bed, tmp_prefix='test'):
+    df_var = id2pos(variant_list)
+    save_bed(df_var, f'{tmp_prefix}.bed.gz')
+    sys_call = f'bedtools intersect -a {tmp_prefix}.bed.gz -b {annot_bed} | gzip > {tmp_prefix}.join.bed.gz'
+    os.system(sys_call)
+    ee = pd.read_csv(f'{tmp_prefix}.join.bed.gz', compression='gzip', sep='\t', header=None)
+    annot = df.variant_id.isin(ee.iloc[:, 3]) * 1
+    os.remove(f'{tmp_prefix}.join.bed.gz')
+    os.remove(f'{tmp_prefix}.bed.gz')
+    df = pd.DataFrame({'VARIANT': variant_list, 'cCRE': annot})
+    return df
 
 if __name__ == '__main__':
-
-
     import argparse
-
-    parser = argparse.ArgumentParser(prog='functional_enrichment.py', description='''
-        Form enrichment table using QTL and fine-mapping results and GTEx curated annotation.
+    parser = argparse.ArgumentParser(prog='functional_enrichment_encode.py', description='''
+        Form enrichment table using QTL and fine-mapping results and ENCODE cCRE annotation.
     ''')
     parser.add_argument('--tissue', help='''
         Name of tissue
     ''')
-    parser.add_argument('--functional_annotation', default='/gpfs/data/im-lab/nas40t2/rbonazzola/GTEx/v8/annotations/WGS_Feature_overlap_collapsed.txt.gz', help='''
-        Functional annotation.
+    parser.add_argument('--functional_annotation', default='/gpfs/data/im-lab/nas40t2/yanyul/GitHub/encode_ccre_extractor/output/merged_bed_exclude_unclassified.{tissue}.bed.gz', help='''
+        Provide the pattern. It is tissue-specific so need include 
+        {tissue} as wildcard.
     ''')
     parser.add_argument('--mixqtl', default='/scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet', help='''
         mixQTL results.
@@ -100,8 +91,7 @@ if __name__ == '__main__':
     else:
         raise ValueError('{} not directory'.format(args.cache_dir))
     
-    logging.info('Loading functional annotation and strong gene list')
-    df_annot = pd.read_csv(args.functional_annotation, sep='\t', compression='gzip')
+    logging.info('Loading strong gene list')
     df_gene = pd.read_csv(args.strong_gene.format(tissue=tissue), sep='\t', compression='gzip')
     
     logging.info('Loading QTL/fine-mapping results')
@@ -199,9 +189,11 @@ if __name__ == '__main__':
     
     
     logging.info('Extract baseline')
-    df_baseline = df_annot[ df_annot.VARIANT.isin(df_qtl_all) ].reset_index(drop=True)
+    # df_baseline = df_annot[ df_annot.VARIANT.isin(df_qtl_all) ].reset_index(drop=True)
+    df_baseline = construct_annotation_table_from_variant_list(df_qtl_all)
     df_baseline['total'] = 1
-    df_baseline_strong = df_annot[ df_annot.VARIANT.isin(df_qtl_strong) ].reset_index(drop=True)
+    # df_baseline_strong = df_annot[ df_annot.VARIANT.isin(df_qtl_strong) ].reset_index(drop=True)
+    df_baseline_strong = construct_annotation_table_from_variant_list(df_qtl_strong)
     df_baseline_strong['total'] = 1
     
     logging.info('Subset variants')
@@ -304,6 +296,3 @@ if __name__ == '__main__':
     logging.info('Collect results')
     res = pd.concat(results, axis=0)
     res.to_csv(args.output, index=True)
-    
-    
-    
