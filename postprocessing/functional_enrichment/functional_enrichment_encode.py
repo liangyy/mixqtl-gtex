@@ -15,6 +15,8 @@ def save_bed(ff, filename):
     ff.to_csv(filename, sep='\t', index=False, header=False, compression='gzip')
         
 def construct_annotation_table_from_variant_list(variant_list, annot_bed, tmp_prefix='test'):
+    variant_list = list(set(variant_list))
+    df = pd.DataFrame({'variant_id': variant_list})
     df_var = id2pos(variant_list)
     save_bed(df_var, f'{tmp_prefix}.bed.gz')
     sys_call = f'bedtools intersect -a {tmp_prefix}.bed.gz -b {annot_bed} | gzip > {tmp_prefix}.join.bed.gz'
@@ -93,7 +95,8 @@ if __name__ == '__main__':
     
     logging.info('Loading strong gene list')
     df_gene = pd.read_csv(args.strong_gene.format(tissue=tissue), sep='\t', compression='gzip')
-    
+    func_annot_bed = args.functional_annotation.format(tissue=tissue)    
+
     logging.info('Loading QTL/fine-mapping results')
     
     # mixFine CS
@@ -190,10 +193,10 @@ if __name__ == '__main__':
     
     logging.info('Extract baseline')
     # df_baseline = df_annot[ df_annot.VARIANT.isin(df_qtl_all) ].reset_index(drop=True)
-    df_baseline = construct_annotation_table_from_variant_list(df_qtl_all)
+    df_baseline = construct_annotation_table_from_variant_list(df_qtl_all, func_annot_bed, tmp_prefix='{}_tmp'.format(tissue))
     df_baseline['total'] = 1
     # df_baseline_strong = df_annot[ df_annot.VARIANT.isin(df_qtl_strong) ].reset_index(drop=True)
-    df_baseline_strong = construct_annotation_table_from_variant_list(df_qtl_strong)
+    df_baseline_strong = construct_annotation_table_from_variant_list(df_qtl_strong, func_annot_bed, tmp_prefix='{}_strong_tmp'.format(tissue))
     df_baseline_strong['total'] = 1
     
     logging.info('Subset variants')
@@ -230,7 +233,8 @@ if __name__ == '__main__':
     
     
     logging.info('Construct tables')
-    cols = ['enhancer', 'promoter', 'open_chromatin_region', 'promoter_flanking_region', 'TF_binding_site', 'total']
+    # cols = ['enhancer', 'promoter', 'open_chromatin_region', 'promoter_flanking_region', 'TF_binding_site', 'total']
+    cols = ['cCRE', 'total'] 
     results = []
     
     logging.info(' * top QTL in all genes')

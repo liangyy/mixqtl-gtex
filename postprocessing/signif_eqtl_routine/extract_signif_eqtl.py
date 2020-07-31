@@ -1,13 +1,14 @@
 import pandas as pd
 import os.path
+import pdb
 
 def read_table(ff):
     fname, file_extension = os.path.splitext(ff)
-    if file_extension == 'parquet':
+    if file_extension == '.parquet':
         return pd.read_parquet(ff)
-    elif file_extension == 'gz':
+    elif file_extension == '.gz':
         _, nested_ext = os.path.splitext(fname)
-        if nested_ext == 'txt':
+        if nested_ext == '.txt':
             return pd.read_csv(ff, compression='gzip', sep='\t', header=0)
         else:
             raise ValueError('Cannot recognize the file name. Not sure how to load the file.')
@@ -83,7 +84,7 @@ if __name__ == '__main__':
             'variant_id': df_i[ variant_col ],
             'pval': pval,
             'qval': qval
-        }))
+        })
         res.append(tmp[ tmp.qval < args.fdr ].reset_index(drop=True))
     res = pd.concat(res, axis=0)
     
