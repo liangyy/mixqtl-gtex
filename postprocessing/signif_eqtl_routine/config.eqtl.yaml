@@ -1,0 +1,12 @@
+name_tag: 'eqtl'
+tissue: 'Whole_Blood'
+
+fdr_cutoff: 0.05
+
+eqtl_table: '/scratch/t.cri.yliang/mixQTL-GTExV8/split_eqtl/{tissue}/eqtl_allpairs.chr{chr_num}.parquet'
+mode: 'eqtl'
+variant_col: 'variant_id'
+phenotype_col: 'gene_id'
+
+tensorqtl_code_path: '/gpfs/data/im-lab/nas40t2/yanyul/GitHub/tensorqtl/tensorqtl'
+

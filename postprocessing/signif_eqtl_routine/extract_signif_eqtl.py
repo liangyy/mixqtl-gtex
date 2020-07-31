@@ -91,7 +91,7 @@ if __name__ == '__main__':
     res = []
     res_pi0 = []
     genes = df[pheno_col].unique()
-    for gene in tqdm(genes[:10]):
+    for gene in tqdm(genes):
         df_i = df[ df[pheno_col] == gene ].reset_index(drop=True)
         df_i = load_pvalue(df_i, mode=args.mode)
         qval, pi0 = rfunc.qvalue(df_i.pval.values)

@@ -1,12 +1,22 @@
 #PBS -S /bin/bash
 #PBS -l walltime=24:00:00
-#PBS -l mem=16gb
+#PBS -l mem=64gb
 #PBS -e logs/split_${TISSUE}.err
 #PBS -o logs/split_${TISSUE}.out
 
 # ARGS1: tissue
 # ARGS2: outdir
 
+if [[ -z $TISSUE ]]
+then
+  TISSUE=$1
+  OUTDIR=$2
+else
+  cd ${PBS_O_WORKDIR}
+fi
+
+source ~/.bash_profile
+source ~/.bashrc
 conda activate mixqtl
 
 eqtl=/gpfs/data/gtex-group/v8/59349/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/eqtl/GTEx_Analysis_v8_eQTL_all_associations/$TISSUE.allpairs.txt.gz
@@ -17,7 +27,7 @@ mkdir -p $outdir/$TISSUE
 
 python split_eqtl_by_chr.py \
   --input $eqtl \
-  --egene $egene \
+  --egene $egene gene_id \
   --output-prefix $outdir/$TISSUE/eqtl_allpairs \
   > logs/split_$TISSUE.log 2>&1
   

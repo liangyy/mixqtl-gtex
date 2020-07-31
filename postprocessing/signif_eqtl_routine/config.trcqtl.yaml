@@ -1,0 +1,12 @@
+name_tag: 'trcqtl'
+tissue: 'Whole_Blood'
+
+fdr_cutoff: 0.05
+
+eqtl_table: '/scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet'
+mode: 'trcqtl'
+variant_col: 'variant_id'
+phenotype_col: 'phenotype_id'
+
+tensorqtl_code_path: '/gpfs/data/im-lab/nas40t2/yanyul/GitHub/tensorqtl/tensorqtl'
+

@@ -1,7 +1,7 @@
 def parse_varid(ll):
     o = []
     for l in ll:
-        g, _, _, _, _ = ll.split('_')
+        g, _, _, _, _ = l.split('_')
         o.append(g)
     return o
 
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='split_eqtl_by_chr.py', description='''
         Split eQTL txt.gz file by chromosome and filter according to a gene list.
     ''')
-    parser.add_argument('--input', nargs='+', help='''
+    parser.add_argument('--input', help='''
         GTEx v8 all pairs association in txt.gz format.
     ''')
     parser.add_argument('--egene', nargs='+', help='''
