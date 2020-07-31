@@ -13,3 +13,7 @@ Run example:
 bash 00_submit_split_eqtl.sh /scratch/t.cri.yliang/mixQTL-GTExV8/split_eqtl
 ``` 
 
+```
+bash 01_submit_signif_eqtl.sh /scratch/t.cri.yliang/mixQTL-GTExV8/signif_eqtl
+```
+

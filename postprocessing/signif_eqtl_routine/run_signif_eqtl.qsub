@@ -1,0 +1,28 @@
+#PBS -S /bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l mem=64gb
+#PBS -l nodes=1:ppn=8
+#PBS -e logs/signif_${CONFIG}_${TISSUE}.err
+#PBS -o logs/signif_${CONFIG}_${TISSUE}.out
+
+# ARGS1: tissue
+# ARGS2: config middle name
+# ARGS2: outdir
+
+if [[ -z $TISSUE ]]
+then
+  TISSUE=$1
+  OUTDIR=$3
+  CONFIG=$2
+else
+  cd ${PBS_O_WORKDIR}
+fi
+
+source ~/.bash_profile
+source ~/.bashrc
+conda activate mixqtl
+
+
+outdir=$OUTDIR/$TISSUE
+
+snakemake --configfile config.$CONFIG.yaml -p --cores 8 > logs/signif_${CONFIG}_$TISSUE.log 2>&1
