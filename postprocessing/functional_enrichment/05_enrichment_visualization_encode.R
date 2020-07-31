@@ -26,16 +26,16 @@ get_fisher = function(dd) {
   do.call(rbind, out)
 }
 
-include_func = c('TF_binding_site', 'promoter', 'enhancer')  # 'open_chromatin_region', 
+include_func = c('cCRE')  # 'open_chromatin_region', 
 
-tissues = read.table('../mixfine/tissue_w_small_sample_size.txt')$V1
+tissues = names(yaml::read_yaml('~/Documents/repo/github/encode_ccre_extractor/query.yaml'))
 # tissues = tissues[ -which(tissues == 'Cells_EBV-transformed_lymphocytes')]
 # tissues = c('Liver', 'Uterus', 'Ovary', 'Kidney_Cortex')
 
 df_test = list()
 df_combine = list()
 for(tt in tissues) {
-  df = read.csv(paste0('enrichment/enrichment_', tt, '.csv'))
+  df = read.csv(paste0('enrichment/encode_enrichment_', tt, '.csv'))
   df_combine[[length(df_combine) + 1]] = df %>% mutate(tissue = tt)
   df_type = df %>% select(gene_list, type) %>% distinct()
   for(i in 1 : nrow(df_type)) {
@@ -65,20 +65,15 @@ for(i in 1 : nrow(df_type)) {
 df_test_c = do.call(rbind, df_test_c)
 df_test_c = df_test_c %>% mutate(qtl_category = paste(gene_list, type))
 
-to_show = c('strong top_qtl', 'strong top_pip', 'strong (in both) top_pip', 'strong (in both) 95%_cs (shared) top snp') # , 'strong 95%_cs (not shared) top snp')
+to_show = c('strong top_qtl', 'strong top_pip', 'strong (in both) top_pip', 'strong (in both) 95%_cs (shared) top snp') #  , 'strong 95%_cs (not shared) top snp', 'strong 95%_cs')
 rename_map = list(
   'strong top_qtl' = 'top QTL',
   'strong top_pip' = 'top PIP',
   'strong (in both) top_pip' = 'top PIP \n (common gene)',
-  'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)',
-  'strong 95%_cs (not shared) top snp' = 'top PIP within 95% CS \n (distinct CS)'
+  'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)'
+  # 'strong 95%_cs (not shared) top snp' = 'top PIP within 95% CS \n (distinct CS)',
+  # 'strong 95%_cs' = '95% CS'
 )
-
-df_test %>% filter(category %in% include_func, qtl_category %in% to_show) %>% ggplot() + 
-  geom_bar(aes(x = qtl_category, y = or, fill = method), position = position_dodge(width=0.8), stat = 'identity') + 
-  geom_errorbar(aes(x = qtl_category, ymin = or_95ci_low, ymax = or_95ci_high, group = method), width = 0.5, position = position_dodge(width=0.8), stat = 'identity') +
-  facet_grid(category~tissue, scales = 'free_y') + 
-  theme(axis.text.x = element_text(angle = 90))
 
 rename_col = function(dd, map) {
   for(nn in names(map)) {
@@ -88,18 +83,31 @@ rename_col = function(dd, map) {
 }
 
 
+
+df_test = df_test %>% mutate(qtl_category_rename = rename_col(qtl_category, rename_map))
+p2 = df_test %>% filter(category %in% include_func, qtl_category %in% to_show) %>% ggplot() + 
+  geom_bar(aes(x = qtl_category_rename, y = or, fill = method), position = position_dodge(width=0.8), stat = 'identity') + 
+  geom_errorbar(aes(x = qtl_category_rename, ymin = or_95ci_low, ymax = or_95ci_high, group = method), width = 0.5, position = position_dodge(width=0.8), stat = 'identity') +
+  facet_wrap(~tissue, scales = 'free_y', ncol = 3) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + th2 +
+  theme(axis.title.x = element_blank()) +
+  ylab('Odds ratio')
+ggsave('functional_enrichment_encode_by_tissue.png', p2, width = 7, height = 7)
+
 df_test_c = df_test_c %>% mutate(qtl_category_rename = rename_col(qtl_category, rename_map))
+
 p = df_test_c %>% 
   filter(category %in% include_func, qtl_category %in% to_show) %>%
   ggplot() + 
   geom_bar(aes(x = qtl_category_rename, y = or, fill = method), position = position_dodge(width=0.8), stat = 'identity') + 
   geom_errorbar(aes(x = qtl_category_rename, ymin = or_95ci_low, ymax = or_95ci_high, group = method), width = 0.2, position = position_dodge(width=0.8), stat = 'identity') + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
-  facet_wrap(~category, scales = 'free_y', ncol = 3) + th2 +
+  facet_wrap(~category, scales = 'free_y', ncol = 3) +
+  th2 +
   theme(axis.title.x = element_blank()) +
   ylab('Odds ratio')
 df_combine %>% mutate(qtl_category = paste(gene_list, type)) %>% filter(qtl_category %in% to_show, X %in% include_func) %>% print(n=100)
-ggsave('functional_enrichment.png', p, width = 7, height = 5)
+ggsave('functional_enrichment_encode.png', p, width = 7, height = 5)
 
 get_se = function(low_ci, high_ci, signif_level = 0.95) {
   (high_ci - low_ci) / 2 / abs(qnorm((1 - signif_level) / 2))
