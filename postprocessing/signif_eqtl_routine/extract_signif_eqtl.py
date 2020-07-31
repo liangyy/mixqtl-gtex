@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os.path
 import pdb
 
@@ -13,6 +14,13 @@ def read_table(ff):
         else:
             raise ValueError('Cannot recognize the file name. Not sure how to load the file.')
     
+def load_pvalue(df, mode):
+    if mode == 'mixqtl':
+        pval = df[ 'pval_meta' ].values
+        pval[ np.isnan(pval) ] = df[ 'pval_trc' ].values[ np.isnan(pval) ]
+        pval[ np.isnan(pval) ] = df[ 'pval_asc' ].values[ np.isnan(pval) ]
+        return pval
+
 if __name__ == '__main__':
 
     import argparse
