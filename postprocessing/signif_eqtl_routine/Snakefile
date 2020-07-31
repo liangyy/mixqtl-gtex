@@ -9,14 +9,18 @@ if '{chr_num}' in config['eqtl_table']:
         input:
             config['eqtl_table']
         output:
-            '{outdir}/signif_qtl.{name_tag}_x_{tissue}.chr{chr_num}.parquet'
+            '{outdir}/signif_qtl.{name_tag}_x_{tissue}.chr{chr_num}.parquet',
+            '{outdir}/signif_qtl_pi0.{name_tag}_x_{tissue}.chr{chr_num}.csv'
+        log: 
+            '{outdir}/signif_qtl.{name_tag}_x_{tissue}.chr{chr_num}.log'
         shell:
             'python extract_signif_eqtl.py \
                 --input {input[0]} {config[variant_col]} {config[phenotype_col]} \
                 --fdr-cutoff {config[fdr_cutoff]} \
                 --mode {config[mode]} \
                 --tensorqtl {config[tensorqtl_code_path]} \
-                --output {output[0]}'
+                --output {output[0]} \
+                --output-pi0 {output[1]} > {log} 2>&1'
 else:
     rule all:
         input:
@@ -26,12 +30,16 @@ else:
         input:
             config['eqtl_table']
         output:
-            '{outdir}/signif_qtl.{name_tag}_x_{tissue}.parquet'
+            '{outdir}/signif_qtl.{name_tag}_x_{tissue}.parquet',
+            '{outdir}/signif_qtl_pi0.{name_tag}_x_{tissue}.csv'
+        log:
+            '{outdir}/signif_qtl.{name_tag}_x_{tissue}.log'
         shell:
             'python extract_signif_eqtl.py \
                 --input {input[0]} {config[variant_col]} {config[phenotype_col]} \
                 --fdr-cutoff {config[fdr_cutoff]} \
                 --mode {config[mode]} \
                 --tensorqtl {config[tensorqtl_code_path]} \
-                --output {output[0]}'
+                --output {output[0]} \
+                --output-pi0 {output[1]} > {log} 2>&1'
 

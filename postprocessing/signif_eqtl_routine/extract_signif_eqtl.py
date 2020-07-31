@@ -19,8 +19,12 @@ def load_pvalue(df, mode):
         pval = df[ 'pval_meta' ].values
         pval[ np.isnan(pval) ] = df[ 'pval_trc' ].values[ np.isnan(pval) ]
         pval[ np.isnan(pval) ] = df[ 'pval_asc' ].values[ np.isnan(pval) ]
-        return pval
-
+        df['pval'] = pval
+    elif mode == 'trcqtl':
+        df['pval'] = df[ 'pval_trc' ].values
+    elif mode == 'eqtl':
+        df['pval'] = df[ 'pval_nominal' ].values
+    return df[ ~ df.pval.isna() ].reset_index(drop=True)
 if __name__ == '__main__':
 
     import argparse
@@ -49,6 +53,9 @@ if __name__ == '__main__':
     parser.add_argument('--output', help='''
         Output significant gene/variant pairs along with 
         their q-values in parquet format.
+    ''')
+    parser.add_argument('--output-pi0', help='''
+        Output the pi0 estimated for each gene in CSV format.
     ''')
     args = parser.parse_args()
     
@@ -82,22 +89,22 @@ if __name__ == '__main__':
     # pool over gene
     logging.info('Looping over genes.')
     res = []
+    res_pi0 = []
     genes = df[pheno_col].unique()
-    for gene in tqdm(genes):
+    for gene in tqdm(genes[:10]):
         df_i = df[ df[pheno_col] == gene ].reset_index(drop=True)
-        pval = load_pvalue(df_i, mode=args.mode)
-        qval = rfunc.qvalue(pval)
-        tmp = pd.DataFrame({
-            'phenotype_id': df_i[ pheno_col ],
-            'variant_id': df_i[ variant_col ],
-            'pval': pval,
-            'qval': qval
-        })
-        res.append(tmp[ tmp.qval < args.fdr ].reset_index(drop=True))
+        df_i = load_pvalue(df_i, mode=args.mode)
+        qval, pi0 = rfunc.qvalue(df_i.pval.values)
+        tmp = df_i[ [pheno_col, variant_col, 'pval'] ].copy()
+        tmp['qval'] = qval
+        res_pi0.append(pd.DataFrame({'phenotype_id': [ gene ], 'pi0': [ pi0 ]}))
+        res.append(tmp[ tmp.qval < args.fdr_cutoff ].reset_index(drop=True))
     res = pd.concat(res, axis=0)
-    
+    res_pi0 = pd.concat(res_pi0, axis=0)    
+
     # save output
     logging.info('Writing output to disk.')
     res.to_parquet(args.output)
+    res_pi0.to_csv(args.output_pi0, index=False)
         
     
