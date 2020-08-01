@@ -7,7 +7,7 @@
 
 # ARGS1: tissue
 # ARGS2: config middle name
-# ARGS2: outdir
+# ARGS3: outdir
 
 if [[ -z $TISSUE ]]
 then
@@ -25,4 +25,4 @@ conda activate mixqtl
 
 outdir=$OUTDIR/$TISSUE
 
-snakemake --configfile config.$CONFIG.yaml -p --cores 8 > logs/signif_${CONFIG}_$TISSUE.log 2>&1
+snakemake --configfile config.$CONFIG.yaml -p --cores 8 --config tissue=$TISSUE outdir=$OUTDIR > logs/signif_${CONFIG}_$TISSUE.log 2>&1
