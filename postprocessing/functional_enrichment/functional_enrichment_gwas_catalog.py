@@ -75,7 +75,7 @@ if __name__ == '__main__':
     logging.info('Loading strong gene list and GWAS catalog table')
     df_gene = pd.read_csv(args.strong_gene.format(tissue=tissue), sep='\t', compression='gzip')
     df_gwas_catalog = pd.read_csv(args.gwas_catalog_table[0], sep='\t')
-    gwas_catalog_variants = list(df_gwas_catalog.iloc[:, args.gwas_catalog_table[1] ])
+    gwas_catalog_variants = list(df_gwas_catalog.iloc[:, int(args.gwas_catalog_table[1]) ])
     del df_gwas_catalog   
 
     logging.info('Loading QTL/fine-mapping results')

@@ -65,15 +65,21 @@ for(i in 1 : nrow(df_type)) {
 df_test_c = do.call(rbind, df_test_c)
 df_test_c = df_test_c %>% mutate(qtl_category = paste(gene_list, type))
 
-to_show = c('strong top_qtl', 'strong top_pip', 'strong (in both) top_pip', 'strong (in both) 95%_cs (shared) top snp', 'strong (in both) 95%_cs') #  , 'strong 95%_cs (not shared) top snp', 'strong 95%_cs')
+# to_show = c('strong top_qtl', 'strong top_pip', 'strong (in both) top_pip', 'strong (in both) 95%_cs (shared) top snp', 'strong 95%_cs', 'strong 95%_cs (not shared)', 'strong (in both) 95%_cs (shared)', 'strong (in both) 95%_cs', 'strong 95%_cs (not shared) top snp') #  , 'strong 95%_cs (not shared) top snp', 'strong 95%_cs')
 rename_map = list(
+  # 'strong (in both) 95%_cs (shared)' = '95% CS (in both)',
+  # 'strong (in both) 95%_cs (shared)' = '95% CS (in both, shared)',
+  # 'strong 95%_cs' = '95% CS',
   'strong top_qtl' = 'top QTL',
   'strong top_pip' = 'top PIP',
   'strong (in both) top_pip' = 'top PIP \n (common gene)',
-  'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)',
-  'strong (in both) 95%_cs' = '95% CS'
-  # 'strong (in both) 95%_cs' = '95% CS (common CS)'
+  # 'strong 95%_cs (not shared) top snp' = 'top PIP within 95% CS \n (distinct CS)',
+  'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)'
+  # 'strong 95%_cs (not shared)' = '95% CS (not shared)',
+  # 'strong (in both) 95%_cs (shared)' = '95% CS (in both, shared)',
+  # 
 )
+to_show = unique(names(rename_map))
 
 rename_col = function(dd, map) {
   for(nn in names(map)) {
@@ -92,7 +98,7 @@ p2 = df_test %>% filter(category %in% include_func, qtl_category %in% to_show) %
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) + th2 +
   theme(axis.title.x = element_blank()) +
   ylab('Odds ratio')
-ggsave('functional_enrichment_gwas_catalog_by_tissue.png', p2, width = 7, height = 15)
+ggsave('functional_enrichment_gwas_catalog_by_tissue.png', p2, width = 10, height = 15)
 
 df_test_c = df_test_c %>% mutate(qtl_category_rename = rename_col(qtl_category, rename_map))
 

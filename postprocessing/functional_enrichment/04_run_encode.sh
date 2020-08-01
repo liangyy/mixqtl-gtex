@@ -32,7 +32,7 @@ nefine_pip='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue
 mixfine_cs='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.mixfine.chr{chr_num}.parquet'
 nefine_cs='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.nefine.chr{chr_num}.parquet'
 
-cache_dir='/scratch/t.cri.yliang/mixQTL-GTExV8/cache_encode/'
+cache_dir='/scratch/t.cri.yliang/mixQTL-GTExV8/cache/'
 
 mkdir -p $cache_dir
 if [[ ! -f enrichment/encode_enrichment_$tissue.csv ]]
