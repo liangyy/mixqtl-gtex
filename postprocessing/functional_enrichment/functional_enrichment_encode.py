@@ -107,7 +107,7 @@ if __name__ == '__main__':
         for i in range(1, 23):
             print(f'Working on chr{i}')
             tmp = pd.read_parquet(args.mixfine_cs.format(chr_num=i, tissue=tissue))
-            tmp = tmp[ tmp.variable_prob > 0.01 ].reset_index(drop=True)
+            tmp = tmp[ tmp.variable_prob > 0 ].reset_index(drop=True)
             top_cs_mix.append(tmp[['phenotype_id', 'variant_id', 'cs', 'variable_prob']])
         top_cs_mix = pd.concat(top_cs_mix, axis=0)
         top_cs_mix.to_parquet(cache_top_cs_mixqtl)
@@ -120,7 +120,7 @@ if __name__ == '__main__':
         for i in range(1, 23):
             print(f'Working on chr{i}')
             tmp = pd.read_parquet(args.nefine_cs.format(chr_num=i, tissue=tissue))
-            tmp = tmp[ tmp.variable_prob > 0.01 ].reset_index(drop=True)
+            tmp = tmp[ tmp.variable_prob > 0 ].reset_index(drop=True)
             top_cs_qtl.append(tmp[['phenotype_id', 'variant_id', 'cs', 'variable_prob']])
         top_cs_qtl = pd.concat(top_cs_qtl, axis=0)
         top_cs_qtl.to_parquet(cache_top_cs_eqtl)
