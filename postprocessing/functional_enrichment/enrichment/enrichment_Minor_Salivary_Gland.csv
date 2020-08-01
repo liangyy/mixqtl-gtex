@@ -23,39 +23,39 @@ open_chromatin_region,224241,80,89,top_pip,strong (in both)
 promoter_flanking_region,227265,166,136,top_pip,strong (in both)
 TF_binding_site,42664,23,24,top_pip,strong (in both)
 total,8449788,3085,3085,top_pip,strong (in both)
-enhancer,78718,403,106,95%_cs,strong
-promoter,86799,1693,701,95%_cs,strong
-open_chromatin_region,224241,967,285,95%_cs,strong
-promoter_flanking_region,227265,1587,485,95%_cs,strong
-TF_binding_site,42664,300,108,95%_cs,strong
-total,8449788,37052,11449,95%_cs,strong
-enhancer,78718,101,79,95%_cs,strong (in both)
-promoter,86799,554,579,95%_cs,strong (in both)
-open_chromatin_region,224241,244,231,95%_cs,strong (in both)
-promoter_flanking_region,227265,325,396,95%_cs,strong (in both)
-TF_binding_site,42664,92,78,95%_cs,strong (in both)
-total,8449788,9960,9078,95%_cs,strong (in both)
-enhancer,78718,49,55,95%_cs (shared),strong (in both)
-promoter,86799,365,449,95%_cs (shared),strong (in both)
-open_chromatin_region,224241,143,162,95%_cs (shared),strong (in both)
-promoter_flanking_region,227265,194,306,95%_cs (shared),strong (in both)
-TF_binding_site,42664,69,61,95%_cs (shared),strong (in both)
-total,8449788,5386,6634,95%_cs (shared),strong (in both)
-enhancer,78718,354,51,95%_cs (not shared),strong
-promoter,86799,1328,252,95%_cs (not shared),strong
-open_chromatin_region,224241,824,123,95%_cs (not shared),strong
-promoter_flanking_region,227265,1393,179,95%_cs (not shared),strong
-TF_binding_site,42664,231,47,95%_cs (not shared),strong
-total,8449788,31666,4815,95%_cs (not shared),strong
-enhancer,78718,1,3,95%_cs (shared) top snp,strong (in both)
-promoter,86799,74,75,95%_cs (shared) top snp,strong (in both)
-open_chromatin_region,224241,12,6,95%_cs (shared) top snp,strong (in both)
-promoter_flanking_region,227265,16,18,95%_cs (shared) top snp,strong (in both)
-TF_binding_site,42664,8,6,95%_cs (shared) top snp,strong (in both)
-total,8449788,441,439,95%_cs (shared) top snp,strong (in both)
-enhancer,78718,38,3,95%_cs (not shared) top snp,strong
-promoter,86799,162,34,95%_cs (not shared) top snp,strong
-open_chromatin_region,224241,62,11,95%_cs (not shared) top snp,strong
-promoter_flanking_region,227265,142,16,95%_cs (not shared) top snp,strong
+enhancer,78718,772,277,95%_cs,strong
+promoter,86799,2576,1122,95%_cs,strong
+open_chromatin_region,224241,1724,669,95%_cs,strong
+promoter_flanking_region,227265,2645,1111,95%_cs,strong
+TF_binding_site,42664,524,300,95%_cs,strong
+total,8449788,70104,28910,95%_cs,strong
+enhancer,78718,195,219,95%_cs,strong (in both)
+promoter,86799,845,929,95%_cs,strong (in both)
+open_chromatin_region,224241,458,557,95%_cs,strong (in both)
+promoter_flanking_region,227265,711,902,95%_cs,strong (in both)
+TF_binding_site,42664,163,233,95%_cs,strong (in both)
+total,8449788,19387,23828,95%_cs,strong (in both)
+enhancer,78718,120,199,95%_cs (shared),strong (in both)
+promoter,86799,577,808,95%_cs (shared),strong (in both)
+open_chromatin_region,224241,298,487,95%_cs (shared),strong (in both)
+promoter_flanking_region,227265,495,800,95%_cs (shared),strong (in both)
+TF_binding_site,42664,132,224,95%_cs (shared),strong (in both)
+total,8449788,12430,21249,95%_cs (shared),strong (in both)
+enhancer,78718,652,78,95%_cs (not shared),strong
+promoter,86799,1999,314,95%_cs (not shared),strong
+open_chromatin_region,224241,1426,182,95%_cs (not shared),strong
+promoter_flanking_region,227265,2150,311,95%_cs (not shared),strong
+TF_binding_site,42664,392,76,95%_cs (not shared),strong
+total,8449788,57674,7661,95%_cs (not shared),strong
+enhancer,78718,2,3,95%_cs (shared) top snp,strong (in both)
+promoter,86799,77,77,95%_cs (shared) top snp,strong (in both)
+open_chromatin_region,224241,13,7,95%_cs (shared) top snp,strong (in both)
+promoter_flanking_region,227265,18,20,95%_cs (shared) top snp,strong (in both)
+TF_binding_site,42664,9,6,95%_cs (shared) top snp,strong (in both)
+total,8449788,496,491,95%_cs (shared) top snp,strong (in both)
+enhancer,78718,37,3,95%_cs (not shared) top snp,strong
+promoter,86799,159,32,95%_cs (not shared) top snp,strong
+open_chromatin_region,224241,61,10,95%_cs (not shared) top snp,strong
+promoter_flanking_region,227265,141,15,95%_cs (not shared) top snp,strong
 TF_binding_site,42664,17,2,95%_cs (not shared) top snp,strong
-total,8449788,2518,345,95%_cs (not shared) top snp,strong
+total,8449788,2476,300,95%_cs (not shared) top snp,strong
