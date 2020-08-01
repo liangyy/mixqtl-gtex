@@ -28,7 +28,7 @@ get_fisher = function(dd) {
 
 include_func = c('TF_binding_site', 'promoter', 'enhancer')  # 'open_chromatin_region', 
 
-tissues = read.table('../mixfine/tissue_w_small_sample_size.txt')$V1
+tissues = read.table('../../mixfine/tissue_w_small_sample_size.txt')$V1
 # tissues = tissues[ -which(tissues == 'Cells_EBV-transformed_lymphocytes')]
 # tissues = c('Liver', 'Uterus', 'Ovary', 'Kidney_Cortex')
 
@@ -70,8 +70,8 @@ rename_map = list(
   'strong top_qtl' = 'top QTL',
   'strong top_pip' = 'top PIP',
   'strong (in both) top_pip' = 'top PIP \n (common gene)',
-  'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)',
-  'strong 95%_cs (not shared) top snp' = 'top PIP within 95% CS \n (distinct CS)'
+  'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)'
+  # 'strong 95%_cs (not shared) top snp' = 'top PIP within 95% CS \n (distinct CS)'
 )
 
 df_test %>% filter(category %in% include_func, qtl_category %in% to_show) %>% ggplot() + 
