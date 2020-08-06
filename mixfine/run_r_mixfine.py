@@ -63,6 +63,11 @@ parser.add_argument('--mode', type=str, help='''
     finemapping mode: mixfine, nefine, trcfine.
     please make sure that the input is consistent with the mode.
 ''')
+parser.add_argument('--mode_extra', nargs='+', help='''
+    when finemapping mode is aimfine, need to specify the path to 
+    corresponding eqtl summary statistics, the path to aim repository, 
+    and the prefix for temporary files.
+''')
 args = parser.parse_args()
 
 
@@ -74,6 +79,9 @@ logging.basicConfig(
     format = '%(asctime)s  %(message)s',
     datefmt = '%Y-%m-%d %I:%M:%S %p'
 )
+
+import numpy as np
+import scipy.stats
 
 import yaml
 def load_yaml(f):
@@ -144,7 +152,7 @@ import tensorqtl
 ## 
 
 ## check mode
-if args.mode == 'mixfine' or args.mode == 'trcfine' or args.mode == 'nefine':
+if args.mode == 'mixfine' or args.mode == 'trcfine' or args.mode == 'nefine' or args.mode == 'aimfine':
     pass
 else:
     raise ValueError('Unsupported mode: {}'.format(args.mode))
@@ -167,6 +175,21 @@ if args.mode != 'nefine':
     asc1_file = asc_[0].format(1)
     asc2_file = asc_[0].format(2)
     asc_gene_col = asc_[1]
+
+if args.mode == 'aimfine':
+    aim_path = args.mode_extra[1]
+    aim_prefix = args.mode_extra[2]
+    eqtl_df = pd.read_parquet(args.mode_extra[0])
+    eqtl_df = eqtl_df[['phenotype_id', 'variant_id', 'pval_nominal', 'slope']]
+    eqtl_df['zscore'] = -1 * np.sign(eqtl_df.slope) * scipy.stats.norm.ppf(eqtl_df.pval_nominal / 2)
+    eqtl_df = eqtl_df.drop(columns=['pval_nominal', 'slope'])
+    extra_args = {
+        'eqtl': eqtl_df,
+        'aim_path': aim_path,
+        'temp_prefix': aim_prefix
+    }
+else:
+    extra_args = {}
 
 ## covariate matrix
 covar_file = args.covariate_matrix
@@ -256,6 +279,6 @@ ix = phenotype_pos_df[phenotype_pos_df['chr']==args.chr].index
 mixfine.run_mixfine(hap1_df, hap2_df, variant_df, 
                    libsize_df, phenotype_df.loc[ix], ref_df.loc[ix], alt_df.loc[ix],
                    phenotype_pos_df.loc[ix], covariates_df, output_prefix,
-                   output_dir=outdir, verbose=True, mode=args.mode,
+                   output_dir=outdir, verbose=True, mode=args.mode, extra_args=extra_args,
                    **param_mixfine)
 
