@@ -9,7 +9,7 @@ def read_table(ff):
         return pd.read_parquet(ff)
     elif file_extension == '.gz':
         _, nested_ext = os.path.splitext(fname)
-        if nested_ext == '.txt':
+        if nested_ext == '.txt' or nested_ext == '.bed':
             return pd.read_csv(ff, compression='gzip', sep='\t', header=0)
         else:
             raise ValueError('Cannot recognize the file name. Not sure how to load the file.')
