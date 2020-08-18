@@ -7,4 +7,4 @@
 *.txt.gz
 *.parquet
 Rplots.pdf
-
+*.csv

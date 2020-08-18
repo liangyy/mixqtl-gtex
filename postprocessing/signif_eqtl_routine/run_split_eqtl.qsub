@@ -20,7 +20,7 @@ source ~/.bashrc
 conda activate mixqtl
 
 eqtl=/gpfs/data/gtex-group/v8/59349/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/eqtl/GTEx_Analysis_v8_eQTL_all_associations/$TISSUE.allpairs.txt.gz
-egene=/gpfs/data/gtex-group/v8/59349/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/eqtl/GTEx_Analysis_v8_eQTL/$TISSUE.v8.egenes.txt.gz
+egene=/gpfs/data/gtex-group/v8/59349/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/eqtl/GTEx_Analysis_v8_eQTL_expression_matrices/$TISSUE.v8.normalized_expression.bed.gz
 outdir=$OUTDIR
 
 mkdir -p $outdir/$TISSUE
