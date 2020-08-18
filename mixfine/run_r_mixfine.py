@@ -179,13 +179,19 @@ if args.mode != 'nefine':
 if args.mode == 'aimfine':
     aim_path = args.mode_extra[1]
     aim_prefix = args.mode_extra[2]
+    aim_temp_dir = args.mode_extra[3]
     eqtl_df = pd.read_parquet(args.mode_extra[0])
+    if 'phenotype_id' not in eqtl_df.columns:
+        eqtl_df = eqtl_df.rename(columns={'gene_id': 'phenotype_id'})
     eqtl_df = eqtl_df[['phenotype_id', 'variant_id', 'pval_nominal', 'slope']]
     eqtl_df['zscore'] = -1 * np.sign(eqtl_df.slope) * scipy.stats.norm.ppf(eqtl_df.pval_nominal / 2)
     eqtl_df = eqtl_df.drop(columns=['pval_nominal', 'slope'])
+    eqtl_df['phenotype_id'] = trim_gene_id(list(eqtl_df['phenotype_id']))
+    eqtl_df = eqtl_df.drop_duplicates(subset=['phenotype_id', 'variant_id'])
     extra_args = {
         'eqtl': eqtl_df,
         'aim_path': aim_path,
+        'temp_dir': aim_temp_dir,
         'temp_prefix': aim_prefix
     }
 else:
@@ -239,7 +245,7 @@ else:
     # add place holder
     libsize_df = pd.DataFrame({'indiv': phenotype_df.columns.tolist(), 'libsize': 1}).set_index('indiv')
 
-if args.mode == 'mixfine':
+if args.mode == 'mixfine' or args.mode == 'aimfine':
     # load allele-specific counts
     logging.info('Load allele-specific counts')
     ref_df = pd.read_csv(asc1_file, sep = '\t', compression = 'gzip', header = 0)

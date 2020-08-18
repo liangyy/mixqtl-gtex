@@ -50,7 +50,7 @@ if config['mode'] == 'mixfine':
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet',
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'
         log: 
-            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.chr{chr_num}.log'
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.{mode}.chr{chr_num}.log'
         threads: 
             1 
         shell:
@@ -85,7 +85,7 @@ elif config['mode'] == 'nefine':
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet',
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'
         log: 
-            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.chr{chr_num}.log'
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.{mode}.chr{chr_num}.log'
         threads: 
             1 
         shell:
@@ -121,12 +121,13 @@ elif config['mode'] == 'aimfine':
             sample = config['library_size']['sample_id_col'],
             asc_genecol = config['asc']['gene_col'],
             egene_genecol = 'gene',
-            temp_prefix = '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.temp_prefix.{mode}.chr{chr_num}'
+            temp_prefix = 'mixfine.{tissue}_GTEx_eGene.temp_prefix.{mode}.chr{chr_num}',
+            temp_dir = '{outdir}/{tissue}'
         output:
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet',
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'
         log: 
-            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.chr{chr_num}.log'
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.{mode}.chr{chr_num}.log'
         threads: 
             1 
         shell:
@@ -144,5 +145,5 @@ elif config['mode'] == 'aimfine':
                 --impute-trc \
                 --gene-list {input.gene_list}:{params.egene_genecol} \
                 --mode {wildcards.mode} \
-                --mode_extra {input.eqtl} {input.aim_path} {params.temp_prefix} \
+                --mode_extra {input.eqtl} {input.aim_path} {params.temp_prefix} {params.temp_dir} \
                 --nthread {threads} > {log} 2>&1'    

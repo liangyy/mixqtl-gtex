@@ -4,7 +4,7 @@ outdir: '/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine'
 
 # gene list qc
 asc_cutoff: 50
-asc_nobs_cutoff: 15
+asc_nobs_cutoff: 15 
 
 hap_pattern: '/scratch/t.cri.yliang/gtexv8_genotype_in_parquet/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.MAF01.chr{{chr_num}}.hap{hap_num}.parquet'
 
