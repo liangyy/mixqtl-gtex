@@ -13,9 +13,9 @@ do
     e=`cat logs/split_$tissue.out|grep Exit | tail -n 1|grep 1 | wc -l`
     if [[ $e == 1 ]]
     then
-      qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR run_split_eqtl.qsub 
+      echo qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR run_split_eqtl.qsub 
     fi
   else
-    qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR run_split_eqtl.qsub
+    echo qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR run_split_eqtl.qsub
   fi
 done 
