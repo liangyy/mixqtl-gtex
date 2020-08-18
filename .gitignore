@@ -8,3 +8,12 @@
 *.parquet
 Rplots.pdf
 *.csv
+.ipynb_checkpoints
+__pycache__
+logs/
+*.out
+*.err
+*.log
+.snakemake
+*.txt
+output/

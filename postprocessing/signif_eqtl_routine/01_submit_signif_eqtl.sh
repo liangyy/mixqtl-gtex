@@ -16,10 +16,10 @@ do
       e=`cat logs/signif_${cc}_${tissue}.out | grep Exit | tail -n 1 | grep 1 | wc -l`
       if [[ $e == 1 ]]
       then
-        echo qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR,CONFIG=$cc run_signif_eqtl.qsub 
+        qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR,CONFIG=$cc run_signif_eqtl.qsub 
       fi
     else
-      echo qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR,CONFIG=$cc run_signif_eqtl.qsub
+      qsub -v TISSUE=$tissue,OUTDIR=$OUTDIR,CONFIG=$cc run_signif_eqtl.qsub
     fi
   done 
 done
