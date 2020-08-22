@@ -271,9 +271,9 @@ else:
 if args.gene_list is not None:
     filename, genecol = args.gene_list.split(':')
     _, file_extension = os.path.splitext(filename)
-    if file_extension == 'gz':
+    if file_extension == '.gz':
         genelist_df = pd.read_csv(filename, sep='\t', compression='gzip', header=0)
-    elif file_extension == 'parquet':
+    elif file_extension == '.parquet':
         genelist_df = pd.read_parquet(filename)
     genelist_df = genelist_df[genecol].to_list()
     phenotype_df, ref_df, alt_df, phenotype_pos_df = filter_by_gene_list(genelist_df, phenotype_df, ref_df, alt_df, phenotype_pos_df)
