@@ -13,6 +13,12 @@ conda activate pytorch-1.4.0-cpu_py37
 
 SNMK=/gpfs/data/im-lab/nas40t2/yanyul/softwares/miniconda2/envs/mixqtl/bin/snakemake
 
-$SNMK -s mixfine.snmk --configfile config.$MYCONF.yaml -p \
-  --config tissue=$TISSUE --cores ${NCORE} > ${PBS_O_WORKDIR}/logs/run-${MYCONF}_${TISSUE}.log 2>&1
+if [[ -z $CHR ]]
+then
+  $SNMK -s mixfine.snmk --configfile config.$MYCONF.yaml -p  --cores ${NCORE} \
+    --config tissue=$TISSUE > ${PBS_O_WORKDIR}/logs/run-${MYCONF}_${TISSUE}.log 2>&1
+else
+  $SNMK -s mixfine.snmk --configfile config.$MYCONF.yaml -p --cores ${NCORE} all_chr \
+    --config tissue=$TISSUE chr_num=$CHR > ${PBS_O_WORKDIR}/logs/run-${MYCONF}_${TISSUE}_${CHR}.log 2>&1
+fi
   

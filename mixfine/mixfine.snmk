@@ -6,6 +6,12 @@ rule all:
         [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ],
         [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ]
 
+if 'chr_num' in config:
+    rule all_chr: 
+        input:
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'.format(**config),
+            '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet'.format(**config)
+
 rule gene_qc:
     '''
     From the gene list, select genes passing QC
