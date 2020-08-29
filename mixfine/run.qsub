@@ -18,7 +18,7 @@ then
   $SNMK -s mixfine.snmk --configfile config.$MYCONF.yaml -p  --cores ${NCORE} \
     --config tissue=$TISSUE > ${PBS_O_WORKDIR}/logs/run-${MYCONF}_${TISSUE}.log 2>&1
 else
-  $SNMK -s mixfine.snmk --configfile config.$MYCONF.yaml -p --cores ${NCORE} all_chr \
+  $SNMK -s mixfine.snmk --configfile config.$MYCONF.yaml -p --cores ${NCORE} \
     --config tissue=$TISSUE chr_num=$CHR > ${PBS_O_WORKDIR}/logs/run-${MYCONF}_${TISSUE}_${CHR}.log 2>&1
 fi
   

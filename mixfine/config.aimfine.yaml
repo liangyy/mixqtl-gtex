@@ -34,3 +34,5 @@ tensorqtl_dir: '/gpfs/data/im-lab/nas40t2/yanyul/GitHub/tensorqtl/tensorqtl'
 run_script_path: '/gpfs/data/im-lab/nas40t2/yanyul/GitHub/mixqtl-pipeline/misc_scripts/prepare_data_for_py_mixqtl_runs/run_py_mixqtl.py'
 
 aim_path: '/gpfs/data/im-lab/nas40t2/yanyul/softwares/aim/aim.jar'
+nthread: 8
+

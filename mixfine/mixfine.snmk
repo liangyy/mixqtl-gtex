@@ -1,17 +1,18 @@
 if 'outdir' not in config:
     config['outdir'] = 'output'
-
-rule all:
-    input:
-        [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ],
-        [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ]
+if 'nthread' not in config:
+    config['nthread'] = 1
 
 if 'chr_num' in config:
-    rule all_chr: 
+    rule all: 
         input:
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'.format(**config),
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet'.format(**config)
-
+else:
+    rule all:
+        input:
+            [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ],
+            [ '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.{mode}.chr{chr_num}.parquet'.format(chr_num=ii, **config) for ii in range(1, 23) ]
 rule gene_qc:
     '''
     From the gene list, select genes passing QC
@@ -58,7 +59,7 @@ if config['mode'] == 'mixfine':
         log: 
             '{outdir}/{tissue}/mixfine.{tissue}_GTEx_eGene.{mode}.chr{chr_num}.log'
         threads: 
-            1 
+            config['nthread'] 
         shell:
             'python run_r_mixfine.py \
                 --hap-file {params.hap_pattern} \
