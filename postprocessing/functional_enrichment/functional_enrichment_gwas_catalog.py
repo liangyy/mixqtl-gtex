@@ -46,6 +46,9 @@ if __name__ == '__main__':
     parser.add_argument('--output', help='''
         output CSV
     ''')
+    parser.add_argument('--exclude_chr', default=None, type=str, help='''
+        list chromosomes to exclude (for example: 1,2,3).
+    ''')
     args = parser.parse_args()
  
     import logging, time, sys, os
@@ -56,6 +59,17 @@ if __name__ == '__main__':
         format = '%(asctime)s  %(message)s',
         datefmt = '%Y-%m-%d %I:%M:%S %p'
     )
+    
+    if args.exclude_chr is None:
+        chrs = [ i for i in range(1, 23) ]
+    else:
+        to_exclude = [ int(i) for i in args.exclude_chr.split(',') ]
+        chrs = []
+        for i in range(1, 23):
+            if i in to_exclude:
+                continue
+            else:
+                chrs.append(i)
     
     tissue = args.tissue
     
@@ -85,7 +99,7 @@ if __name__ == '__main__':
         top_cs_mix = pd.read_parquet(cache_top_cs_mixqtl)
     else:
         top_cs_mix = []
-        for i in range(1, 23):
+        for i in chrs:
             print(f'Working on chr{i}')
             tmp = pd.read_parquet(args.mixfine_cs.format(chr_num=i, tissue=tissue))
             tmp = tmp[ tmp.variable_prob > 0 ].reset_index(drop=True)
@@ -98,7 +112,7 @@ if __name__ == '__main__':
         top_cs_qtl = pd.read_parquet(cache_top_cs_eqtl)
     else:
         top_cs_qtl = []
-        for i in range(1, 23):
+        for i in chrs:
             print(f'Working on chr{i}')
             tmp = pd.read_parquet(args.nefine_cs.format(chr_num=i, tissue=tissue))
             tmp = tmp[ tmp.variable_prob > 0 ].reset_index(drop=True)
@@ -111,7 +125,7 @@ if __name__ == '__main__':
         top_pip_mix = pd.read_parquet(cache_top_pip_mixqtl)
     else:
         top_pip_mix = []
-        for i in range(1, 23):
+        for i in chrs:
             print(f'Working on chr{i}')
             tmp = pd.read_parquet(args.mixfine_pip.format(chr_num=i, tissue=tissue))
             tmp = tmp[ tmp.variable_prob > 0]
@@ -125,7 +139,7 @@ if __name__ == '__main__':
         top_pip_qtl = pd.read_parquet(cache_top_pip_eqtl)
     else:
         top_pip_qtl = []
-        for i in range(1, 23):
+        for i in chrs:
             print(f'Working on chr{i}')
             tmp = pd.read_parquet(args.nefine_pip.format(chr_num=i, tissue=tissue))
             tmp = tmp[ tmp.variable_prob > 0]
@@ -142,7 +156,7 @@ if __name__ == '__main__':
     else:
         top_mix = []
         df_qtl = []
-        for i in range(1, 23):
+        for i in chrs:
             print(f'Working on chr{i}')
             tmp = pd.read_parquet(args.mixqtl.format(chr_num=i, tissue=tissue))
             df_qtl.append(tmp[['phenotype_id', 'variant_id']])
