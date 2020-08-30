@@ -74,6 +74,9 @@ if __name__ == '__main__':
     parser.add_argument('--output', help='''
         output CSV
     ''')
+    parser.add_argument('--exclude_chr', default=None, type=str, help='''
+        list chromosomes to exclude (for example: 1,2,3).
+    ''')
     args = parser.parse_args()
  
     import logging, time, sys, os
@@ -84,6 +87,17 @@ if __name__ == '__main__':
         format = '%(asctime)s  %(message)s',
         datefmt = '%Y-%m-%d %I:%M:%S %p'
     )
+    
+    if args.exclude_chr is None:
+        chrs = [ i for i in range(1, 23) ]
+    else:
+        to_exclude = [ int(i) for i in args.exclude_chr.split(',') ]
+        chrs = []
+        for i in range(1, 23):
+            if i in to_exclude:
+                continue
+            else:
+                chrs.append(i)
     
     tissue = args.tissue
     
