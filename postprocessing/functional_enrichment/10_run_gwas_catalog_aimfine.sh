@@ -1,8 +1,8 @@
 #PBS -S /bin/bash
 #PBS -l walltime=24:00:00
 #PBS -l mem=16gb
-#PBS -e logs/run_gwas_catalog_aimfine_${tissue}.err
-#PBS -o logs/run_gwas_catalog_aimfine_${tissue}.out
+#PBS -e logs/run_gwas_catalog_for_aimfine_$method.err
+#PBS -o logs/run_gwas_catalog_for_aimfine_$method.out
 
 
 source ~/.bash_profile
@@ -21,15 +21,15 @@ gwas_catalog='/gpfs/data/im-lab/nas40t2/yanyul/mv_from_scratch/repo_new/rotation
 mixqtl='/scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet'
 top_qtl='/gpfs/data/gtex-group/v8/59349/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/eqtl/GTEx_Analysis_v8_eQTL/{tissue}.v8.egenes.txt.gz'
 strong_gene='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/genes-passed-qc.txt.gz'
-mixfine_pip='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.aimfine.chr{chr_num}.parquet'
+mixfine_pip=/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.$method.chr{chr_num}.parquet
 nefine_pip='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_pip.nefine.chr{chr_num}.parquet'
-mixfine_cs='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.aimfine.chr{chr_num}.parquet'
+mixfine_cs=/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.$method.chr{chr_num}.parquet
 nefine_cs='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/mixfine.{tissue}_GTEx_eGene.finemap_cs.nefine.chr{chr_num}.parquet'
 
 cache_dir='/scratch/t.cri.yliang/mixQTL-GTExV8/cache_aimfine/'
 
 mkdir -p $cache_dir
-if [[ ! -f enrichment/gwas_catalog_aimfine_enrichment_$tissue.csv ]]
+if [[ ! -f enrichment/gwas_catalog_for_aimfine_enrichment_${tissue}_$method.csv ]]
 then
   python functional_enrichment_gwas_catalog.py \
     --tissue $tissue \
@@ -42,6 +42,7 @@ then
     --mixfine_cs $mixfine_cs \
     --nefine_cs $nefine_cs \
     --cache_dir $cache_dir \
-    --output enrichment/gwas_catalog_aimfine_enrichment_$tissue.csv
+    --exclude_chr 6 \
+    --output enrichment/gwas_catalog_for_aimfine_enrichment_${tissue}_$method.csv
 fi
 
