@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 .DS_Store
+*.rds
 *.csv
 *.txt.gz
 *.parquet
@@ -17,3 +18,4 @@ logs/
 .snakemake
 *.txt
 output/
+partition_variance/

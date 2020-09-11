@@ -68,14 +68,14 @@ df_test_c = df_test_c %>% mutate(qtl_category = paste(gene_list, type))
 # to_show = c('strong top_qtl', 'strong top_pip', 'strong (in both) top_pip', 'strong (in both) 95%_cs (shared) top snp', 'strong 95%_cs', 'strong 95%_cs (not shared)', 'strong (in both) 95%_cs (shared)', 'strong (in both) 95%_cs', 'strong 95%_cs (not shared) top snp') #  , 'strong 95%_cs (not shared) top snp', 'strong 95%_cs')
 rename_map = list(
   # 'strong (in both) 95%_cs (shared)' = '95% CS (in both)',
-  'strong (in both) 95%_cs (shared)' = '95% CS (in both, shared)',
-  'strong 95%_cs' = '95% CS',
+  # 'strong (in both) 95%_cs (shared)' = '95% CS (in both, shared)',
+  # 'strong 95%_cs' = '95% CS',
   'strong top_qtl' = 'top QTL',
-  'strong top_pip' = 'top PIP',
-  'strong (in both) top_pip' = 'top PIP \n (common gene)',
+  # 'strong top_pip' = 'top PIP',
+  'strong (in both) top_pip' = 'top PIP'  # ,
   # 'strong 95%_cs (not shared) top snp' = 'top PIP within 95% CS \n (distinct CS)',
-  'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)',
-  'strong 95%_cs (not shared)' = '95% CS (not shared)'#,
+  # 'strong (in both) 95%_cs (shared) top snp' = 'top PIP within 95% CS \n (common CS)'# ,
+  # 'strong 95%_cs (not shared)' = '95% CS (not shared)'#,
   # 'strong (in both) 95%_cs (shared)' = '95% CS (in both, shared)',
   # 
 )
@@ -135,3 +135,4 @@ df_test_summary = df_test %>% group_by(category, qtl_category, tissue) %>% summa
 df_test_summary = df_test_summary %>% group_by(category, qtl_category) %>% summarize(z = inverse_variance_meta(or_diff, or_diff_se))
 df_test_summary %>% 
   filter(category %in% include_func, qtl_category %in% to_show)
+saveRDS(df_test_c %>% filter(type == 'top_qtl'), 'top_qtl_encode.rds')

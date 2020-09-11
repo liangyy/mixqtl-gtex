@@ -1,0 +1,27 @@
+#PBS -S /bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l mem=16gb
+#PBS -e logs/cleanup_${TISSUE}.err
+#PBS -o logs/cleanup_${TISSUE}.out
+
+
+source ~/.bash_profile
+source ~/.bashrc
+cd ${PBS_O_WORKDIR}
+
+conda activate pytorch-1.4.0-cpu_py37
+
+SNMK=/gpfs/data/im-lab/nas40t2/yanyul/softwares/miniconda2/envs/mixqtl/bin/snakemake
+
+for ii in `seq 1 22`
+do
+  output=$OUTPREFIX$ii$OUTSUFFIX
+  input=$INPREFIX$ii$INSUFFIX
+  if [[ ! -f $output ]]
+  then
+    python clean_up_parquet.py \
+      --input-parquet $input \
+      --output-parquet $output \
+      --path-to-tensorqtl $TENSORQTL
+  fi
+done
