@@ -51,3 +51,16 @@ p = tmp %>% ggplot() + geom_histogram(aes(bhat), binwidth = 0.05) + facet_wrap(~
   th2
 ggsave('effect_size_dist.png', p, width = 7, height = 8)   
 message(nrow(tmp))
+
+tmp3 = tmp %>% filter(pval < 1e-4) %>% 
+  summarize(q05 = get_quantile(bhat, 0.05), q95 = get_quantile(bhat, 0.95))
+p2 = tmp %>% filter(pval < 1e-4) %>% 
+  ggplot() + geom_histogram(aes(bhat), binwidth = 0.05) +
+  geom_vline(data = tmp3, aes(xintercept = q05), linetype = 2) +
+  geom_vline(data = tmp3, aes(xintercept = q95), linetype = 2) +
+  geom_label(data = tmp3, 
+             aes(label = paste0('90% interval \n', round(q05, 3), ' ~ ', round(q95, 3))), 
+             x = 1.7, y = 10000) +
+  th
+p2
+ggsave('effect_size_dist_p_lt_1e-4.png', p2, width = 6, height = 4)   
