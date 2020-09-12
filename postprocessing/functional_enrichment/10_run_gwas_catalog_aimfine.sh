@@ -42,7 +42,7 @@ then
     --mixfine_cs $mixfine_cs \
     --nefine_cs $nefine_cs \
     --cache_dir $cache_dir \
-    --exclude_chr 6 \
+    --exclude_chr 6,19 \
     --output enrichment/gwas_catalog_for_aimfine_enrichment_${tissue}_$method.csv
 fi
 

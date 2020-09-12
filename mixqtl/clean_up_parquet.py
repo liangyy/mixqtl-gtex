@@ -47,5 +47,5 @@ if __name__ == '__main__':
     df = mixqtl.cleanup_pvalue(df)
     
     logging.info('Writing output')
-    df = pd.to_parquet(args.output_parquet)
+    df.to_parquet(args.output_parquet)
     

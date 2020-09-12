@@ -17,7 +17,7 @@ then
   cd $PBS_O_WORKDIR
 fi
 
-gwas_catalog='/gpfs/data/im-lab/nas40t2/yanyul/mv_from_scratch/repo_new/rotation-at-imlab/analysis/annotate_gwas_catalog/output/GWAS_SNP_in_GTEx.with_key_and_info.GTExID2rsID__GWAS_catalog_in_rsID.txt'
+function_annotation='/gpfs/data/im-lab/nas40t2/rbonazzola/GTEx/v8/annotations/WGS_Feature_overlap_collapsed.txt.gz'
 mixqtl='/scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl/{tissue}/mixqtl.{tissue}_GTEx_eGene.cis_qtl_pairs.mixQTL.chr{chr_num}.parquet'
 top_qtl='/gpfs/data/gtex-group/v8/59349/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2017-06-05_v8/eqtl/GTEx_Analysis_v8_eQTL/{tissue}.v8.egenes.txt.gz'
 strong_gene='/scratch/t.cri.yliang/mixQTL-GTExV8/mixfine/{tissue}/genes-passed-qc.txt.gz'
@@ -33,7 +33,7 @@ if [[ ! -f enrichment/enrichment_for_aimfine_${tissue}_$method.csv ]]
 then
   python functional_enrichment.py \
     --tissue $tissue \
-    --gwas_catalog_table $gwas_catalog 0 \
+    --functional_annotation $function_annotation \
     --mixqtl $mixqtl \
     --top_qtl $top_qtl \
     --strong_gene $strong_gene \
