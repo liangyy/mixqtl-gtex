@@ -64,3 +64,23 @@ p2 = tmp %>% filter(pval < 1e-4) %>%
   th
 p2
 ggsave('effect_size_dist_p_lt_1e-4.png', p2, width = 6, height = 4)   
+
+df = arrow::read_parquet('signif_mixqtl_in_whole_blood.parquet')
+tmp4 = df %>% summarize(q025 = get_quantile(bhat, 0.025), q975 = get_quantile(bhat, 0.975))
+p3 = df %>% 
+  ggplot() + geom_histogram(aes(bhat), binwidth = 0.05) +
+  geom_vline(data = tmp4, aes(xintercept = q025), linetype = 2) +
+  geom_vline(data = tmp4, aes(xintercept = q975), linetype = 2) +
+  geom_label(data = tmp4, 
+             aes(label = paste0('95% interval \n', round(q025, 3), ' ~ ', round(q975, 3))), 
+             x = 4, y = 3e5) +
+  th
+p3
+ggsave('effect_size_dist_fdr_0.05.png', p3, width = 6, height = 4)   
+df %>% summarize(median = median(abs(bhat)), q95 = quantile(abs(bhat), probs = 0.95))
+
+relative_error_exp_approx = function(x) {
+  (exp(x) - 1 - x) / x
+}
+xseq = seq(-1, 1, by = 0.05)
+data.frame(xseq, relative_error_exp_approx(xseq))
