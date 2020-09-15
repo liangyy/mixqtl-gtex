@@ -1,0 +1,1 @@
+for i in `cat ../preprocessing/expression/tissue_metainfo.csv | cut -f 1 -d,`; do e=`cat zenodo_meta/upload_$i.log|grep depository | awk -F" = " '{print $(NF)}' | sed 's#https://zenodo.org/api/deposit/depositions/#10.5281/zenodo.#g'`; echo $i $e; done > zenodo_meta/depository_list.txt
