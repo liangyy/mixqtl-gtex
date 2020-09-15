@@ -14,17 +14,17 @@ conda activate zenodo
 for tt in `cat zenodo_meta/batch$BATCH`
 do
   
-  tissue_list=filelist_$tt.txt
+  tissue_list=zenodo_meta/filelist_$tt.txt
   
   for i in `seq 1 22`
   do
     echo /scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl_cleanup/mixqtl.$tt.chr$i.parquet >> $tissue_list
   done
   
-  python zenodo_uploader.py \
-    --meta-yaml zenodo_meta/$tissue.yaml \
+  python /gpfs/data/im-lab/nas40t2/yanyul/GitHub/misc-tools/zenodo_upload/zenodo_uploader.py \
+    --meta-yaml zenodo_meta/$tt.yaml \
     --file-list $tissue_list \
-    --token /home/t.cri.yliang/zenodo.txt > zenodo_meta/upload_${BATCH}.log 2>&1
+    --token /home/t.cri.yliang/zenodo_haky.txt > zenodo_meta/upload_${tt}.log 2>&1
   
   rm $tissue_list
 
