@@ -1,0 +1,31 @@
+#PBS -S /bin/bash
+#PBS -l walltime=24:00:00
+#PBS -l mem=4gb
+#PBS -e zenodo_meta/upload_${BATCH}.err
+#PBS -o zenodo_meta/upload_${BATCH}.out
+
+source ~/.bash_profile
+source ~/.bashrc
+cd ${PBS_O_WORKDIR}
+
+conda activate zenodo
+
+
+for tt in `cat zenodo_meta/batch$BATCH`
+do
+  
+  tissue_list=filelist_$tt.txt
+  
+  for i in `seq 1 22`
+  do
+    echo /scratch/t.cri.yliang/mixQTL-GTExV8/mixqtl_cleanup/mixqtl.$tt.chr$i.parquet >> $tissue_list
+  done
+  
+  python zenodo_uploader.py \
+    --meta-yaml zenodo_meta/$tissue.yaml \
+    --file-list $tissue_list \
+    --token /home/t.cri.yliang/zenodo.txt > zenodo_meta/upload_${BATCH}.log 2>&1
+  
+  rm $tissue_list
+
+done
