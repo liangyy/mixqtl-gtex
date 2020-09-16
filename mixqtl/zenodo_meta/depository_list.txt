@@ -27,7 +27,7 @@ Esophagus_Mucosa 10.5281/zenodo.4030657
 Esophagus_Muscularis 10.5281/zenodo.4030685
 Heart_Atrial_Appendage 10.5281/zenodo.4030743
 Heart_Left_Ventricle 10.5281/zenodo.4031957
-Kidney_Cortex 10.5281/zenodo.4030882
+Kidney_Cortex 10.5281/zenodo.4032151
 Liver 10.5281/zenodo.4030953
 Lung 10.5281/zenodo.4030983
 Minor_Salivary_Gland 10.5281/zenodo.4032104
