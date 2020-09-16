@@ -19,3 +19,4 @@ logs/
 *.txt
 output/
 partition_variance/
+zenodo_meta/
