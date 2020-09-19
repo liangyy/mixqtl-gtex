@@ -47,3 +47,5 @@ ggsave('signif_gene.png', p2, width = 5, height = 5)
 
 df %>% reshape2::dcast(tissue ~ method, value.var = 'unique_gene') %>% summarize(mean_increase = mean(mixqtl - eqtl)) %>% pander::pander(caption = 'unique_gene')
 df %>% reshape2::dcast(tissue ~ method, value.var = 'unique_pair') %>% summarize(mean_increase = mean(mixqtl - eqtl)) %>% pander::pander(caption = 'unique_pair')
+
+df %>% reshape2::dcast(tissue ~ method, value.var = 'unique_pair') %>% mutate(frac_increase = (mixqtl - eqtl) / eqtl) %>% summarize(median(frac_increase), mean(frac_increase))

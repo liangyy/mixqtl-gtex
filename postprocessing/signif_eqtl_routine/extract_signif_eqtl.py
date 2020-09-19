@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import scipy.stats
 import os.path
 import pdb
 
@@ -24,6 +25,8 @@ def load_pvalue(df, mode):
         df['pval'] = df[ 'pval_trc' ].values
     elif mode == 'eqtl':
         df['pval'] = df[ 'pval_nominal' ].values
+    elif mode == 'rasqual':
+        df['pval'] = scipy.stats.chi2.sf(df['Chi_square_statistic_2_x_log_Likelihood_ratio'], 1)
     return df[ ~ df.pval.isna() ].reset_index(drop=True)
 if __name__ == '__main__':
 
