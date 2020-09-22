@@ -27,6 +27,7 @@ def load_pvalue(df, mode):
         df['pval'] = df[ 'pval_nominal' ].values
     elif mode == 'rasqual':
         df['pval'] = scipy.stats.chi2.sf(df['Chi_square_statistic_2_x_log_Likelihood_ratio'], 1)
+        df = df[ df.rs_ID != 'SKIPPED' ].reset_index(drop=True)
     return df[ ~ df.pval.isna() ].reset_index(drop=True)
 if __name__ == '__main__':
 
@@ -97,7 +98,13 @@ if __name__ == '__main__':
     for gene in tqdm(genes):
         df_i = df[ df[pheno_col] == gene ].reset_index(drop=True)
         df_i = load_pvalue(df_i, mode=args.mode)
-        qval, pi0 = rfunc.qvalue(df_i.pval.values)
+        if df_i.shape[0] < 1:
+            continue
+        try:
+            qval, pi0 = rfunc.qvalue(df_i.pval.values)
+        except:
+            logging.info(f'Failed on {gene}')
+            continue
         tmp = df_i[ [pheno_col, variant_col, 'pval'] ].copy()
         tmp['qval'] = qval
         res_pi0.append(pd.DataFrame({'phenotype_id': [ gene ], 'pi0': [ pi0 ]}))

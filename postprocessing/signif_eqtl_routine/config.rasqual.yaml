@@ -1,8 +1,6 @@
 name_tag: 'rasqual'
-# tissue: 'Whole_Blood'
 
 fdr_cutoff: 0.05
-
 eqtl_table: '/scratch/t.cri.yliang/run-rasqual-results/kidney_cortex/rasqual_output.{tissue}.chr{chr_num}.parquet'
 mode: 'rasqual'
 variant_col: 'rs_ID'
