@@ -115,6 +115,19 @@ p = df_test_c %>%
 df_combine %>% mutate(qtl_category = paste(gene_list, type)) %>% filter(qtl_category %in% to_show, X %in% include_func) %>% print(n=100)
 ggsave('functional_enrichment_gwas_catalog.png', p, width = 7, height = 5)
 
+p2 = df_test_c %>% 
+  filter(category %in% include_func, qtl_category %in% to_show) %>%
+  ggplot() + 
+  geom_point(aes(x = qtl_category_rename, y = or, color = method), position = position_dodge(width=0.5)) + 
+  geom_errorbar(aes(x = qtl_category_rename, ymin = or_95ci_low, ymax = or_95ci_high, group = method, color = method), width = 0.2, position = position_dodge(width=0.5), stat = 'identity') + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  facet_wrap(~category, scales = 'free_y', ncol = 3) +
+  th2 +
+  theme(axis.title.x = element_blank()) +
+  expand_limits(y = 0) +
+  ylab('Odds ratio') 
+ggsave('functional_enrichment_gwas_catalog_point.png', p2, width = 7, height = 5)
+
 get_se = function(low_ci, high_ci, signif_level = 0.95) {
   (high_ci - low_ci) / 2 / abs(qnorm((1 - signif_level) / 2))
 }
